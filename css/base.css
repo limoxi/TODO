@@ -1,0 +1,84 @@
+.btn-custom{
+
+}
+.btn:hover{
+	background-color: #5cb85c;
+}
+.a-list{
+	box-shadow: none;
+	-webkit-box-shadow: none;
+}
+.a-container{
+	padding: 50px;
+}
+.a-tap{
+	display: inline-block;
+	width: 300px;
+	height: 150px;
+	cursor: pointer;
+	border-radius: 5px;
+	margin: 5px 3px;
+}
+.a-tap:hover .a-tap-header{
+	opacity: 1;
+}
+.a-tap-header{
+	opacity: 0;
+	margin: 0;
+	margin-top: -5px;
+}
+.a-tap-header:after{
+	clear: both;
+	content: '';
+	height: 0;
+	display: block;
+}
+.a-tap-header span{
+	float: right;
+	margin-left: 10px;
+}
+.a-tap .a-top-time{
+	font-style: italic;
+	position: absolute;
+    margin-top: 110px;
+    margin-left: 145px;
+    font-size: 12px;
+}
+.a-tap-text{
+	display: inline-flex;
+}
+.a-tap-new{
+	position: fixed;
+    bottom: 0;
+    padding: 10px 40px;
+    font-size: 24px;
+    margin: 0;
+    border: none;
+    border-bottom: 2px solid orange;
+    margin-bottom: 10px;
+    width: 100%;
+}
+.a-tap-new:focus{
+	border: none;
+	border-bottom: 2px solid orange;
+}
+.a-slider-container{
+	position: fixed;
+	top: 0;
+	right: 0;
+	width: 165px;
+	height: 90%;
+	padding: 0;
+	font-size: 12px;
+	overflow: auto;
+}
+.a-finished-tap-header{
+	font-size: 26px;
+    padding-left: 138px;
+}
+.a-finished-tap-header:hover{
+	color: #5bc0de;
+}
+.a-finished-list{
+	display: none;
+}
