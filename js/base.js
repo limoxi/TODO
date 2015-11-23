@@ -113,11 +113,47 @@ FinishedStore.prototype = {
 	},
 };
 
+//设置数据
+var Settings = function(name){
+	var setting = window.localStorage.getItem(name);
+	setting = setting ? JSON.parse(setting): {};
+	return {
+		get: function(key){
+			return setting[key];
+		},
+		set: function(key, value){
+			if(value){
+				setting[key] = value;
+			}else{
+				delete setting[key];
+			}
+			window.localStorage.setItem(name, JSON.stringify(setting));
+		}
+	};
+};
+
+var observerSetting = Settings('observer');
+var notifySetting = Settings('notify');
+var setting = Settings('setting');
+
 $(function(){
 	//功能检查
 	initCheck();
 	store = new Store('.a-list', '#tap-template');
 	finishedStore = new FinishedStore('.a-finished-list', '#finished-tap-template');
+	//初始化工具
+	initTools();
+	//监听事件
+	bindListeners();
+});
+
+function initCheck(){
+	if(!window.localStorage){
+		alert('此浏览器不支持本地存储！！');	
+	}
+}
+
+function bindListeners(){
 	var tmpl = $('#tap-template').html();
 	$('.a-tap-new').on('keyup', function(e){
 		var content = $(this).val().trim();
@@ -126,17 +162,45 @@ $(function(){
 		store.set(datetime, content);
 		$(this).val('');
 	});
-	//初始化工具
-	$('[data-toggle="tooltip"]').tooltip();
-	$('.a-finished-tap-header').on('click', function(){
-		$('.a-finished-list').toggle();
-	});
-});
+}
 
-function initCheck(){
-	if(!window.localStorage){
-		alert('此浏览器不支持本地存储！！');	
-	}
+function initTools(){
+	$('[data-toggle="tooltip"]').tooltip();
+	$('.a-doneList').on('click', function(){
+		$('.a-finished-list').slideToggle('fast');
+	});
+	//设置
+	$('[data-toggle="setting-popover"]').popover({
+		html: true,
+		placement: 'top',
+		template: '<div class="popover" role="tooltip">\
+				   <div class="arrow"></div><h3 class="popover-title">设置\
+				   </h3><div class="popover-content"></div></div>',
+		container: 'body',
+		content: '还未施工...'
+	});
+	//时间
+	$('[data-toggle="observer-popover"]').popover({
+		html: true,
+		placement: 'top',
+		template: '<div class="popover" role="tooltip">\
+				   <div class="arrow"></div><h3 class="popover-title">监听\
+				   </h3><div class="popover-content"></div></div>',
+		container: 'body',
+		content: '<label><input placeholder="分钟"></label>\
+				   <label><input placeholder="颜色值#fff"></label>\
+				   <button type="button"> 设置 </button>'
+	});
+	//提醒
+	$('[data-toggle="notify-popover"]').popover({
+		html: true,
+		placement: 'top',
+		template: '<div class="popover" role="tooltip">\
+				   <div class="arrow"></div><h3 class="popover-title">提醒\
+				   </h3><div class="popover-content"></div></div>',
+		container: 'body',
+		content: '<input type="checkbox">'
+	});
 }
 
 //将‘2015/11/22 下午9:57:30’ 转换成 ‘2015/11/22 21:57:30’，以便转换成Date实例

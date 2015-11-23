@@ -6,6 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="./css/bootstrap-theme.min.css">
+	<link rel="stylesheet" type="text/css" href="./css/bootstrap-switch.min.css">
 	<link rel="stylesheet" type="text/css" href="./css/base.css">
 	
 </head>
@@ -14,13 +15,18 @@
 		<div class="list-group a-list"></div>
 	</div>
 	<div class="container a-slider-container">
-		<span class="glyphicon glyphicon-th-list a-finished-tap-header"></span>
 		<div class="list-group a-finished-list"></div>
 	</div>
 	<div class="footer container-fluid">
 		<label>
 			<input type="text" class="a-tap-new" placeholder="需要做些什么...(50字限制)" maxlength="100">
 		</label>
+		<div class="a-settings">
+			<span class="glyphicon glyphicon-list a-doneList"></span>
+			<span class="glyphicon glyphicon-cog a-setting" data-toggle="setting-popover"></span>
+			<span class="glyphicon glyphicon-time a-observer" data-toggle="observer-popover"></span>
+			<span class="glyphicon glyphicon-bell a-notify" data-toggle="notify-popover"></span>
+		</div>
 	</div>
 	<!-- template -->
 	<script id="tap-template" type="text/x-handlebars-template">
@@ -61,6 +67,7 @@
 
 	<script type="text/javascript" src="./js/jquery-2.1.4.js"></script>
 	<script type="text/javascript" src="./js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="./js/bootstrap-switch.min.js"></script>
 	<script type="text/javascript" src="./js/handlebars-v4.0.2.js"></script>
 	<script type="text/javascript" src="./js/AS.js"></script>
 	<script type="text/javascript" src="./js/base.js"></script>

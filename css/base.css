@@ -18,6 +18,8 @@
 	cursor: pointer;
 	border-radius: 5px;
 	margin: 5px 3px;
+	box-shadow: 2px 2px 6px;
+	border: none;
 }
 .a-tap:hover .a-tap-header{
 	opacity: 1;
@@ -67,7 +69,7 @@
 	top: 0;
 	right: 0;
 	width: 165px;
-	height: 90%;
+	height: 85%;
 	padding: 0;
 	font-size: 12px;
 	overflow: auto;
@@ -81,4 +83,20 @@
 }
 .a-finished-list{
 	display: none;
+}
+.a-settings{
+    display: inline-block;
+    position: fixed;
+    bottom: 60px;
+    right: 0;
+    width: 150px;
+}
+.a-settings span{
+	font-size: 20px;
+    display: block;
+    float: left;
+    margin: 8px;
+}
+.a-doneList:hover, .a-setting:hover, .a-observer:hover, .a-notify:hover{
+	color: #CC0033;
 }
