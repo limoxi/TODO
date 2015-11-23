@@ -42,7 +42,9 @@ function Store(container, tmpl){
 		"120": "#f0ad4e",
 		"360": "#d9534f"
 	};
-	this.timer = window.setInterval(this.checkStatus, 1200*1000);
+	this.timer = window.setInterval(function(){
+		that.checkStatus.call(that);
+	}, 1200*1000);
 	this.checkStatus();
 }
 Store.prototype = {
@@ -54,6 +56,7 @@ Store.prototype = {
 		this.$container.append(this.template({text: value, time: key}));
 		this._saveData();
 		this.keyArray.push(key);
+		this.$container.find('[data-toggle="tooltip"]').tooltip();
 	},
 	remove: function(key){
 		delete this._data[key];
