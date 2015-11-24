@@ -89,7 +89,7 @@
     position: fixed;
     bottom: 60px;
     right: 0;
-    width: 150px;
+    width: 200px;
 }
 .a-settings span{
 	font-size: 20px;
@@ -97,6 +97,6 @@
     float: left;
     margin: 8px;
 }
-.a-doneList:hover, .a-setting:hover, .a-observer:hover, .a-notify:hover{
+.a-doneList:hover, .a-setting:hover, .a-observer:hover, .a-notify:hover, .a-sync:hover{
 	color: #CC0033;
 }
