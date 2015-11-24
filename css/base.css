@@ -1,6 +1,9 @@
 .btn-custom{
 
 }
+.action{
+	color: #CC0033;
+}
 .btn:hover{
 	background-color: #5cb85c;
 }

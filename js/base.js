@@ -35,6 +35,7 @@ function Store(container, tmpl){
 		storage.clear();
 		storage.setItem('todoReady', true);
 	}
+	this.notifyIcon = '/images/logo.jpg';
 	this.$container = $(container);
 	var tmplStr = $(tmpl).html();
 	this.template = Handlebars.compile(tmplStr);
@@ -66,16 +67,10 @@ function Store(container, tmpl){
 	}
 	this.$container.append(tapArray.join(''));
 	this.keyArray = temKeyArray;
-	//开启时间监控
-	this.timeThreshold = {
-		//时间阀值,单位分钟
-		"30": "#337ab7",
-		"120": "#f0ad4e",
-		"360": "#d9534f"
-	};
+	
 	this.timer = window.setInterval(function(){
 		that.checkStatus.call(that);
-	}, 1200*1000);
+	}, 5*1000);
 	this.checkStatus();
 }
 Store.prototype = {
@@ -95,6 +90,9 @@ Store.prototype = {
 		this._saveData();
 		this.$container.find('a[data-key="'+key+'"]').remove();
 	},
+	setTimeThreshold: function(timeData){
+		this.timeThreshold = timeData;
+	},
 	checkStatus: function(){
 		var now = new Date();
 		for(var i in this.keyArray){
@@ -102,7 +100,15 @@ Store.prototype = {
 			var dif = (now - dateTransfer(key))/1000/60;
 			var tempColor = 'white';
 			for(var min in this.timeThreshold){
-				if(dif >= min) tempColor = this.timeThreshold[min];
+				if(dif >= min && this.$container.find('a[data-key="'+key+'"]').css('background')!=this.timeThreshold[min]){
+					tempColor = this.timeThreshold[min];
+					//提醒
+					new Notification('帅锅喊你改bug啦～', {
+						dir: 'ltr',
+						body: this._data[key],
+						icon: this.notifyIcon
+					});
+				}
 			}
 			this.$container.find('a[data-key="'+key+'"]').css('background', tempColor);
 		}
@@ -158,7 +164,9 @@ var Settings = function(name){
 			}else{
 				delete setting[key];
 			}
+			console.log('set'+name+'=>>'+key+'=='+value);
 			window.localStorage.setItem(name, JSON.stringify(setting));
+			store.setTimeThreshold(setting);
 		}
 	};
 };
@@ -182,6 +190,17 @@ function initCheck(){
 	if(!window.localStorage){
 		alert('此浏览器不支持本地存储！！');
 		return;
+	}
+	if(!window.Notification){
+		alert('此浏览器不支持桌面提醒！！');
+		return;
+	}
+	if(window.Notification !== 'denied'){
+		window.Notification.requestPermission(function(permission){
+  			if(permission === "granted") {
+        		$('.a-notify').addClass('action');
+      		}
+    	});
 	}
 	uuid = window.localStorage.getItem('uuid');
 	if(!uuid){
@@ -210,7 +229,7 @@ function initTools(){
 	$('[data-toggle="setting-popover"]').popover({
 		html: true,
 		placement: 'top',
-		template: '<div class="popover" role="tooltip">\
+		template: '<div class="popover" class="a-observer-settings" role="tooltip">\
 				   <div class="arrow"></div><h3 class="popover-title">设置\
 				   </h3><div class="popover-content"></div></div>',
 		container: 'body',
@@ -224,19 +243,27 @@ function initTools(){
 				   <div class="arrow"></div><h3 class="popover-title">监听\
 				   </h3><div class="popover-content"></div></div>',
 		container: 'body',
-		content: '<label><input placeholder="分钟"></label>\
-				   <label><input placeholder="颜色值#fff"></label>\
-				   <button type="button"> 设置 </button>'
+		content: '<label><input placeholder="分钟" class="a-observer-time"></label>\
+				   <label><input placeholder="颜色值#fff" class="a-observer-color"></label>\
+				   <button type="button" class="a-observer-set"> 设置 </button>'
+	}).on('shown.bs.popover', function(){
+		//绑定时间设置事件
+		$('.a-observer-set').on('click', function(){
+			var time = $('.a-observer-time').val().trim();
+			var color = $('.a-observer-color').val().trim();
+			observerSetting.set(time, color);
+		});
 	});
 	//提醒
+	var content = '未开启桌面通知功能';
+	if(Notification.permission === 'granted'){
+		content = '已经开启桌面通知功能';
+	}
 	$('[data-toggle="notify-popover"]').popover({
 		html: true,
 		placement: 'top',
-		template: '<div class="popover" role="tooltip">\
-				   <div class="arrow"></div><h3 class="popover-title">提醒\
-				   </h3><div class="popover-content"></div></div>',
 		container: 'body',
-		content: '<input type="checkbox">'
+		content: content
 	});
 }
 
