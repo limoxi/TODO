@@ -211,11 +211,17 @@ function initCheck(){
 
 function bindListeners(){
 	var tmpl = $('#tap-template').html();
+	IS_ENTER_MORE='';
 	$('.a-tap-new').on('keyup', function(e){
 		var content = $(this).val().trim();
 		if(content == '' || e.keyCode != 13) return;
 		var datetime = new Date().toLocaleString();
+		if(IS_ENTER_MORE != '' && ((new Date()-IS_ENTER_MORE)/600)<1){
+			$('.bs-example-modal-lg').modal({keyboard: false});
+			return false;
+		}
 		store.set(datetime, content);
+		IS_ENTER_MORE = new Date();
 		$(this).val('');
 	});
 }
