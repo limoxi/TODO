@@ -70,7 +70,7 @@ function Store(container, tmpl){
 	
 	this.timer = window.setInterval(function(){
 		that.checkStatus.call(that);
-	}, 5*1000);
+	}, 120*1000);
 	this.checkStatus();
 }
 Store.prototype = {
@@ -98,7 +98,7 @@ Store.prototype = {
 		for(var i in this.keyArray){
 			var key = this.keyArray[i];
 			var dif = (now - dateTransfer(key))/1000/60;
-			var tempColor = 'white';
+			var tempColor = 'whitesmoke';
 			for(var min in this.timeThreshold){
 				var hex = rgbToHex(this.$container.find('a[data-key="'+key+'"]').css('background'));
 				console.log(hex, '======', this.timeThreshold[min]);
