@@ -100,7 +100,10 @@ Store.prototype = {
 			var dif = (now - dateTransfer(key))/1000/60;
 			var tempColor = 'white';
 			for(var min in this.timeThreshold){
-				if(dif >= min && this.$container.find('a[data-key="'+key+'"]').css('background')!=this.timeThreshold[min]){
+				var hex = rgbToHex(this.$container.find('a[data-key="'+key+'"]').css('background'));
+				console.log(hex, '======', this.timeThreshold[min]);
+
+				if(dif >= min && hex!=this.timeThreshold[min]){
 					tempColor = this.timeThreshold[min];
 					//提醒
 					new Notification('帅锅喊你改bug啦～', {
@@ -108,6 +111,9 @@ Store.prototype = {
 						body: this._data[key],
 						icon: this.notifyIcon
 					});
+				}
+				if(hex == this.timeThreshold[min]){
+					tempColor = this.timeThreshold[min];
 				}
 			}
 			this.$container.find('a[data-key="'+key+'"]').css('background', tempColor);
@@ -195,10 +201,20 @@ function initCheck(){
 		alert('此浏览器不支持桌面提醒！！');
 		return;
 	}
+	var content = '未开启桌面通知功能';
 	if(window.Notification !== 'denied'){
 		window.Notification.requestPermission(function(permission){
   			if(permission === "granted") {
         		$('.a-notify').addClass('action');
+				if(Notification.permission === 'granted'){
+					content = '已经开启桌面通知功能';
+				}
+				$('[data-toggle="notify-popover"]').popover({
+					html: true,
+					placement: 'top',
+					container: 'body',
+					content: content
+				});
       		}
     	});
 	}
@@ -260,17 +276,7 @@ function initTools(){
 			observerSetting.set(time, color);
 		});
 	});
-	//提醒
-	var content = '未开启桌面通知功能';
-	if(Notification.permission === 'granted'){
-		content = '已经开启桌面通知功能';
-	}
-	$('[data-toggle="notify-popover"]').popover({
-		html: true,
-		placement: 'top',
-		container: 'body',
-		content: content
-	});
+	
 }
 
 //将‘2015/11/22 下午9:57:30’ 转换成 ‘2015/11/22 21:57:30’，以便转换成Date实例
@@ -283,4 +289,14 @@ function dateTransfer(dateStr){
 		return new Date(dateStr.replace('上午', ''));
 	}
 	return new Date(dateStr);
+}
+
+//将得到的background-color由rgb格式(rgb(255, 255, 255))转换为hex格式(#ffffff)
+function rgbToHex(bgColor){
+	bgColor = bgColor.substring(4, bgColor.length-1).split(',');
+	var r = parseInt(bgColor[0]),
+		g = parseInt(bgColor[1]),
+		b = parseInt(bgColor[2]);
+	var result = '#' + r.toString(16) + g.toString(16) + b.toString(16);
+	return result;
 }
