@@ -40,6 +40,7 @@ function Store(container, tmpl){
 	var tmplStr = $(tmpl).html();
 	this.template = Handlebars.compile(tmplStr);
 	this._data = JSON.parse(storage.getItem('todoData') || '{}');
+	this.timeThreshold = JSON.parse(storage.getItem('observer') || '{}');
 
 	this._saveData = function(){
 		storage.setItem('todoData', JSON.stringify(this._data))
@@ -95,29 +96,21 @@ Store.prototype = {
 	},
 	checkStatus: function(){
 		var now = new Date();
+		var needNotify = false;
 		for(var i in this.keyArray){
 			var key = this.keyArray[i];
 			var dif = (now - dateTransfer(key))/1000/60;
 			var tempColor = 'whitesmoke';
 			for(var min in this.timeThreshold){
 				var hex = rgbToHex(this.$container.find('a[data-key="'+key+'"]').css('background'));
-				console.log(hex, '======', this.timeThreshold[min]);
-
 				if(dif >= min && hex!=this.timeThreshold[min]){
-					tempColor = this.timeThreshold[min];
-					//提醒
-					new Notification('帅锅喊你改bug啦～', {
-						dir: 'ltr',
-						body: this._data[key],
-						icon: this.notifyIcon
-					});
-				}
-				if(hex == this.timeThreshold[min]){
+					needNotify = true;
 					tempColor = this.timeThreshold[min];
 				}
 			}
 			this.$container.find('a[data-key="'+key+'"]').css('background', tempColor);
 		}
+		needNotify && AS.notify('task');
 		console.log('任务定时监测...(间隔20min)');
 	},
 	stopStatusChecking: function(){
@@ -125,6 +118,7 @@ Store.prototype = {
 		window.clearInterval(that.timer);
 	}
 };
+
 
 function FinishedStore(container, tmpl){
 	var storage = window.localStorage;
@@ -184,6 +178,21 @@ var setting = Settings('setting');
 $(function(){
 	//功能检查
 	initCheck();
+	//桌面通知
+	AS.notifer = {};
+	AS.notify = function(title){
+		if(!title || title.trim() == '') return;
+		if(AS.notifer[title]){
+			AS.notifer[title].close();
+			AS.notifer[title] = void 0;
+		}
+		AS.notifer[title] = new Notification('来自TODO', {
+			dir: 'ltr',
+			body: '帅锅喊你改bug啦～',
+			icon: '/images/logo.jpg'
+		});
+
+	};
 	store = new Store('.a-list', '#tap-template');
 	finishedStore = new FinishedStore('.a-finished-list', '#finished-tap-template');
 	//初始化工具
@@ -261,12 +270,20 @@ function initTools(){
 	$('[data-toggle="observer-popover"]').popover({
 		html: true,
 		placement: 'top',
-		template: '<div class="popover" role="tooltip">\
-				   <div class="arrow"></div><h3 class="popover-title">监听\
-				   </h3><div class="popover-content"></div></div>',
 		container: 'body',
 		content: '<label><input placeholder="分钟" class="a-observer-time"></label>\
-				   <label><input placeholder="颜色值#fff" class="a-observer-color"></label>\
+				   <input type="hidden" class="a-observer-color">\
+				   <div class="a-observer-color-picker"><span style="background:#66FF00" data-hex="#66FF00"></span>\
+				   <span style="background:#99FF00" data-hex="#99FF00"></span>&nbsp;<span style="background:#CCFF00" data-hex="#CCFF00"></span>\
+				   <span style="background:#FFFF00" data-hex="#FFFF00"></span>&nbsp;<span style="background:#FFCC00" data-hex="#FFCC00"></span>\
+				   <span style="background:#99CC00" data-hex="#99CC00"></span>&nbsp;<span style="background:#66CC00" data-hex="#66CC00"></span>\
+				   <span style="background:#FF6600" data-hex="#FF6600"></span>&nbsp;<span style="background:#FF3300" data-hex="#FF3300"></span>\
+				   <span style="background:#FF00FF" data-hex="#FF00FF"></span>&nbsp;<span style="background:#CC00FF" data-hex="#CC00FF"></span>\
+				   <span style="background:#9900FF" data-hex="#9900FF"></span>&nbsp;<span style="background:#FF0066" data-hex="#FF0066"></span>\
+				   <span style="background:#00CCFF" data-hex="#00CCFF"></span>&nbsp;<span style="background:#0099FF" data-hex="#0099FF"></span>\
+				   <span style="background:#00CC99" data-hex="#00CC99"></span>&nbsp;<span style="background:#669999" data-hex="#669999"></span>\
+				   <span style="background:#990033" data-hex="#990033"></span>&nbsp;<span style="background:#999999" data-hex="#999999"></span>\
+				   <span style="background:#CCCCFF" data-hex="#CCCCFF"></span>&nbsp;<span style="background:#9933FF" data-hex="#9933FF"></span></div>\
 				   <button type="button" class="a-observer-set"> 设置 </button>'
 	}).on('shown.bs.popover', function(){
 		//绑定时间设置事件
@@ -275,7 +292,39 @@ function initTools(){
 			var color = $('.a-observer-color').val().trim();
 			observerSetting.set(time, color);
 		});
+		//绑定颜色选择事件
+		$('.a-observer-color-picker').delegate('span', 'click', function(){
+			var color = $(this).attr('data-hex');
+			$(this).css('border', '3px dashed black').siblings().css('border', 'none');
+			$('.a-observer-color').val(color);
+		});
 	});
+
+	//消息条
+	var type_desc = {
+		success: "干得漂亮～",
+		info: "你有新短消息～",
+		warn: "前方高能！",
+		error: "WTF!!"
+	};
+	var toastTimer,
+		$alert = $('.a-alert'),
+		$alertTitle = $alert.find('.a-alert-title'),
+		$alertMessage = $alert.find('.a-alert-message');
+	AS.toast = function(msg, type, time){
+		if(!msg || msg.trim()==='') return;
+		type = type || "info";
+		time = time || 5;
+		var title = type_desc[type] || "你有新短消息～";
+		window.clearTimeout(toastTimer);
+		$alertTitle.html(title);
+		$alertMessage.html(msg);
+		$alert.css('opacity', 1);
+		toastTimer = window.setTimeout(function(){
+			$alert.css('opacity', 0);
+		}, time*1000);
+	};
+
 	
 }
 

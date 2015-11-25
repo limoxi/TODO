@@ -320,21 +320,6 @@
 
 	/* 内部使用的工具方法 --end */
 
-    /* 临时方法 --start */
-
-    var alertTimer = void 0;
-    AS.alert = function(msg){
-        window.clearTimeout(alertTimer);
-        var el = AS('.alertBox');
-        el.innerHTML = msg;
-        el.style.display = 'block';
-        alertTimer = window.setTimeout(function(){
-            el.style.display = 'none';
-        }, 2000);
-    };
-
-    /* 临时方法 --end */
-
 	window.AS = AS;
 
 })(window);
