@@ -242,7 +242,9 @@ function bindListeners(){
 		if(content == '' || e.keyCode != 13) return;
 		var datetime = new Date().toLocaleString();
 		if(IS_ENTER_MORE != '' && ((new Date()-IS_ENTER_MORE)/600)<1){
-			$('.bs-example-modal-lg').modal({keyboard: false});
+			// $('.bs-example-modal-lg').modal({keyboard: false});
+			$('.a-tap-new').blur();
+			AS.toast('当前操作过于频繁，请重试','no_tips','2');
 			return false;
 		}
 		store.set(datetime, content);
@@ -305,7 +307,8 @@ function initTools(){
 		success: "干得漂亮～",
 		info: "你有新短消息～",
 		warn: "前方高能！",
-		error: "WTF!!"
+		error: "WTF!!",
+		no_tips: " ",
 	};
 	var toastTimer,
 		$alert = $('.a-alert'),
@@ -319,9 +322,11 @@ function initTools(){
 		window.clearTimeout(toastTimer);
 		$alertTitle.html(title);
 		$alertMessage.html(msg);
-		$alert.css('opacity', 1);
+		$alert.css({'opacity':1,'top':'100px'});
+		$alert.addClass('tips_div');
 		toastTimer = window.setTimeout(function(){
 			$alert.css('opacity', 0);
+			$alert.removeClass('tips_div');
 		}, time*1000);
 	};
 
