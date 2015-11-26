@@ -102,7 +102,8 @@ Store.prototype = {
 			var dif = (now - dateTransfer(key))/1000/60;
 			var tempColor = 'whitesmoke';
 			for(var min in this.timeThreshold){
-				var hex = rgbToHex(this.$container.find('a[data-key="'+key+'"]').css('background'));
+				var bgColor = this.$container.find('a[data-key="'+key+'"]').css('background-color');
+				var hex = rgbToHex(bgColor);
 				if(dif >= min && hex!=this.timeThreshold[min]){
 					needNotify = true;
 					tempColor = this.timeThreshold[min];
