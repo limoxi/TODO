@@ -47,6 +47,7 @@ function Store(container, tmpl){
 	};
 	//绑定工具事件
 	var that = this;
+	this.editting = false;
 	this.$container.delegate('.a-tap-header span', 'click', function(){
 		var dataKey = $(this).parents('.a-tap').attr('data-key');
 		if($(this).hasClass('a-tap-delete')){
@@ -57,6 +58,13 @@ function Store(container, tmpl){
 			var content = $(this).parent().siblings('.a-tap-text').html();
 			finishedStore.set(dataKey, content);
 			that.remove(dataKey);
+		}else if($(this).hasClass('a-tap-edit')){
+			//编辑
+			$('.a-tap-new').val(that.get(dataKey)).focus();
+			that.editting = true;
+			that.edittingKey = dataKey;
+		}else if($(this).hasClass('a-tap-flash')){
+			$(this).parent().parent().toggleClass('animation-flash');
 		}
 	});
 	//初始化数据
@@ -68,19 +76,31 @@ function Store(container, tmpl){
 	}
 	this.$container.append(tapArray.join(''));
 	this.keyArray = temKeyArray;
+	this.startTimer();
 	
-	this.timer = window.setInterval(function(){
-		that.checkStatus.call(that);
-	}, 1200*1000);
 	this.checkStatus();
 }
 Store.prototype = {
+	startTimer: function(){
+		var that = this;
+		var observerTimer = setting.get('timer');
+		if(observerTimer){
+			observerTimer = parseInt(observerTimer);
+		}else{
+			observerTimer = 120;
+		}
+		console.log(observerTimer);
+		if(this.timer) this.stopTimer();
+		this.timer = window.setInterval(function(){
+			that.checkStatus.call(that);
+		}, observerTimer * 1000);
+	},
 	get: function(key){
 		return this._data[key];
 	},
-	set: function(key, value){
+	set: function(key, value, action){
 		this._data[key] = value;
-		this.$container.append(this.template({text: value, time: key}));
+		!action && this.$container.append(this.template({text: value, time: key}));
 		this._saveData();
 		this.keyArray.push(key);
 		this.$container.find('[data-toggle="tooltip"]').tooltip();
@@ -112,11 +132,11 @@ Store.prototype = {
 			this.$container.find('a[data-key="'+key+'"]').css('background', tempColor);
 		}
 		needNotify && AS.notify('task');
-		console.log('任务定时监测...(间隔20min)');
 	},
-	stopStatusChecking: function(){
+	stopTimer: function(){
 		var that = this;
 		window.clearInterval(that.timer);
+		this.timer = void 0;
 	}
 };
 
@@ -241,37 +261,45 @@ function initCheck(){
 
 function bindListeners(){
 	var tmpl = $('#tap-template').html();
-	IS_ENTER_MORE='';
 	$('.a-tap-new').on('keyup', function(e){
 		var content = $(this).val().trim();
 		if(content == '' || e.keyCode != 13) return;
 		var datetime = new Date().toLocaleString();
-		if(IS_ENTER_MORE != '' && ((new Date()-IS_ENTER_MORE)/600)<1){
-			// $('.bs-example-modal-lg').modal({keyboard: false});
-			$('.a-tap-new').blur();
-			AS.toast('当前操作过于频繁，请重试','no_tips','2');
-			return false;
+
+		if(store.editting){
+			datetime = store.edittingKey;
+			$('.a-list').find('a[data-key="'+datetime+'"]').find('.a-tap-text').html(content);
 		}
-		store.set(datetime, content);
-		IS_ENTER_MORE = new Date();
-		$(this).val('');
+		store.set(datetime, content, store.editting);
+		$(this).val('').blur();
+		store.editting = false;
+		store.edittingKey = '';
 	});
 }
 
 function initTools(){
 	$('[data-toggle="tooltip"]').tooltip();
 	$('.a-doneList').on('click', function(){
-		$('.a-finished-list').slideToggle('fast');
+		$('.a-slider-container').toggle('fast');
 	});
 	//设置
 	$('[data-toggle="setting-popover"]').popover({
 		html: true,
 		placement: 'top',
-		template: '<div class="popover" class="a-observer-settings" role="tooltip">\
-				   <div class="arrow"></div><h3 class="popover-title">设置\
-				   </h3><div class="popover-content"></div></div>',
 		container: 'body',
-		content: '还未施工...'
+		content: '<input placeholder="消息提醒频率(分钟)" class="a-setting-timer">\
+					<button type="button" class="a-setting-set"> 设置 </button>'
+	}).on('shown.bs.popover', function(){
+		$('.a-setting-set').on('click', function(){
+			var timer = $('.a-setting-timer').val();
+			if(!timer || timer.trim() == ''){
+				AS.toast('设置频率不能为空', 'warn');
+				return;
+			}
+			timer = parseInt(timer)*60;
+			setting.set('timer', timer);
+			store.startTimer();
+		});
 	});
 	//时间
 	$('[data-toggle="observer-popover"]').popover({

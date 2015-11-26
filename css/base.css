@@ -59,15 +59,15 @@
     font-size: 24px;
     margin: 0;
     border: none;
-    border-bottom: 2px solid orange;
+    border-bottom: 2px solid #0099FF;
     margin-bottom: 10px;
     width: 100%;
 }
 .a-tap-new:focus{
 	border: none;
-	border-bottom: 2px solid orange;
 }
 .a-slider-container{
+	display: none;
 	position: fixed;
 	top: 0;
 	right: 0;
@@ -85,12 +85,12 @@
 	color: #5bc0de;
 }
 .a-finished-list{
-	display: none;
+	
 }
 .a-settings{
     display: inline-block;
     position: fixed;
-    bottom: 60px;
+    bottom: 65px;
     right: 0;
     width: 200px;
 }
@@ -112,31 +112,6 @@
     min-width: 350px;
     text-align: center;
 }
-.tips_div{
-    -webkit-animation:up 1s linear;
-	-moz-animation:up 1s linear;
-	animation:up 1s linear;
-}
-@-webkit-keyframes up{
-	0%{
-		top:0;
-		opacity: 0.3;
-	}
-	100%{
-		top:100px;
-		opacity: 1;
-	}
-}
-@-moz-keyframes up{
-    0%{
-		top:0;
-		opacity: 0.3;
-	}
-	100%{
-		top:100px;
-		opacity: 1;
-	}
-}
 .a-observer-color-picker span{
 	display: inline-block;
 	width: 20px;
@@ -147,8 +122,18 @@
 	width: 40%;
     border: 2px solid wheat;
 }
+.a-setting-timer{
+	width: 100%;
+    border: 2px solid wheat;
+    margin-bottom: 2px;
+}
 .a-observer-set{
     width: 90%;
+    border: 2px solid wheat;
+    border-radius: 5px;
+}
+.a-setting-set{
+	width: 100%;
     border: 2px solid wheat;
     border-radius: 5px;
 }
