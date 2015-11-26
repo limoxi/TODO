@@ -71,7 +71,7 @@ function Store(container, tmpl){
 	
 	this.timer = window.setInterval(function(){
 		that.checkStatus.call(that);
-	}, 120*1000);
+	}, 1200*1000);
 	this.checkStatus();
 }
 Store.prototype = {
@@ -160,6 +160,10 @@ var Settings = function(name){
 			return setting[key];
 		},
 		set: function(key, value){
+			if(!key || key.trim() == '') {
+				AS.toast('必须输入时间啊亲！！！', 'warn');
+				return false;
+			}
 			if(value){
 				setting[key] = value;
 			}else{
@@ -348,6 +352,7 @@ function dateTransfer(dateStr){
 
 //将得到的background-color由rgb格式(rgb(255, 255, 255))转换为hex格式(#ffffff)
 function rgbToHex(bgColor){
+	console.log('bgColor=======>>>', bgColor);
 	bgColor = bgColor.substring(4, bgColor.length-1).split(',');
 	var r = parseInt(bgColor[0]),
 		g = parseInt(bgColor[1]),
