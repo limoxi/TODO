@@ -51,6 +51,7 @@
 }
 .a-tap-text{
 	display: inline-flex;
+	word-break: break-all;
 }
 .a-tap-new{
 	position: fixed;
