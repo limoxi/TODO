@@ -65,6 +65,10 @@ function Store(container, tmpl){
 			that.edittingKey = dataKey;
 		}else if($(this).hasClass('a-tap-flash')){
 			$(this).parent().parent().toggleClass('animation-flash');
+			$(this).attr('data-original-title','取消关注');
+			if(!$(this).parent().parent().hasClass('animation-flash')){
+				$(this).attr('data-original-title','关注');
+			}
 		}
 	});
 	//初始化数据
