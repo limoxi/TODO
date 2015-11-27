@@ -1,0 +1,140 @@
+.btn-custom{
+
+}
+.action{
+	color: #CC0033;
+}
+.btn:hover{
+	background-color: #5cb85c;
+}
+.a-list{
+	box-shadow: none;
+	-webkit-box-shadow: none;
+}
+.a-container{
+	padding: 50px;
+}
+.a-tap{
+	display: inline-block;
+	width: 300px;
+	height: 150px;
+	cursor: pointer;
+	border-radius: 5px;
+	margin: 5px 3px;
+	box-shadow: 2px 2px 6px;
+	border: none;
+}
+.a-tap:hover .a-tap-header{
+	opacity: 1;
+}
+.a-tap-header{
+	opacity: 0;
+	margin: 0;
+	margin-top: -5px;
+}
+.a-tap-header:after{
+	clear: both;
+	content: '';
+	height: 0;
+	display: block;
+}
+.a-tap-header span{
+	float: right;
+	margin-left: 10px;
+}
+.a-tap .a-top-time{
+	font-style: italic;
+	position: absolute;
+    margin-top: 110px;
+    margin-left: 145px;
+    font-size: 12px;
+}
+.a-tap-text{
+	display: inline-flex;
+	word-break: break-all;
+}
+.a-tap-new{
+	position: fixed;
+    bottom: 0;
+    padding: 10px 40px;
+    font-size: 24px;
+    margin: 0;
+    border: none;
+    border-bottom: 2px solid #0099FF;
+    margin-bottom: 10px;
+    width: 100%;
+}
+.a-tap-new:focus{
+	border: none;
+}
+.a-slider-container{
+	display: none;
+	position: fixed;
+	top: 0;
+	right: 0;
+	width: 165px;
+	height: 85%;
+	padding: 0;
+	font-size: 12px;
+	overflow: auto;
+}
+.a-finished-tap-header{
+	font-size: 26px;
+    padding-left: 138px;
+}
+.a-finished-tap-header:hover{
+	color: #5bc0de;
+}
+.a-finished-list{
+	
+}
+.a-settings{
+    display: inline-block;
+    position: fixed;
+    bottom: 65px;
+    right: 0;
+    width: 200px;
+}
+.a-settings span{
+	font-size: 20px;
+    display: block;
+    float: left;
+    margin: 8px;
+}
+.a-doneList:hover, .a-setting:hover, .a-observer:hover, .a-notify:hover, .a-sync:hover{
+	color: #CC0033;
+}
+.a-alert{
+	display: inline-block;
+	opacity: 0;
+    position: fixed;
+    left: 40%;
+    top:0;
+    min-width: 350px;
+    text-align: center;
+}
+.a-observer-color-picker span{
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	cursor: pointer;
+}
+.a-observer-time{
+	width: 40%;
+    border: 2px solid wheat;
+}
+.a-setting-timer{
+	width: 100%;
+    border: 2px solid wheat;
+    margin-bottom: 2px;
+}
+.a-observer-set{
+    width: 90%;
+    border: 2px solid wheat;
+    border-radius: 5px;
+}
+.a-setting-set{
+	width: 100%;
+    border: 2px solid wheat;
+    border-radius: 5px;
+}
