@@ -21,7 +21,7 @@
 	</div>
 	<div class="footer container-fluid">
 		<label>
-			<input type="text" class="a-tap-new" placeholder="需要做些什么...(50字限制)" maxlength="100">
+			<input type="text" data-target="" class="a-tap-new" placeholder="需要做些什么...(50字限制)" maxlength="100">
 		</label>
 		<div class="a-settings">
 			<span class="glyphicon glyphicon-refresh a-sync"></span>
@@ -37,22 +37,24 @@
 	</div>
 	<!-- template -->
 	<script id="tap-template" type="text/x-handlebars-template">
-		<a class="list-group-item a-tap" data-key="{{ time }}">
+		<a class="list-group-item a-tap {{#if is_finished}}animation-flash{{/if}}" data-key="{{ tid }}">
 			<p class="a-tap-header">
 				<span class="a-tap-delete glyphicon glyphicon-remove" data-toggle="tooltip" title="删除"></span>
 				<span class="a-tap-done glyphicon glyphicon-ok" data-toggle="tooltip" title="完成"></span>
 				<span class="a-tap-edit glyphicon glyphicon-wrench" data-toggle="tooltip" title="编辑"></span>
-				<span class="a-tap-flash glyphicon glyphicon-flash" data-toggle="tooltip" title="关注"></span>
+				<span class="a-tap-flash glyphicon glyphicon-flash {{#if _flash}}active{{/if}}" data-toggle="tooltip" title="关注"></span>
 			</p>
-			<p class="a-top-time">{{ time }}</p>
-			<p class="a-tap-text">{{ text }}</p>
+			<p class="a-tap-time">{{ created_at }}</p>
+			<h4 class="a-tap-title">{{ title }}</h4>
+			<p class="a-tap-content">{{ content }}</p>
 			
 		</a>
 	</script>
 	<script id="finished-tap-template" type="text/x-handlebars-template">
-		<a class="list-group-item a-finished-tap" data-key="{{ time }}">
-			<del class="a-finished-tap-text">{{ text }}</del>
-			<p class="a-finished-top-time">{{ time }}</p>
+		<a class="list-group-item a-finished-tap" data-key="{{ tid }}">
+			<del class="a-finished-tap-title">{{ title }}</del>
+			<h5 class="a-finished-tap-content">{{ content }}</h5>
+			<p class="a-finished-tap-time">{{ created_at }}</p>
 		</a>
 	</script>
 	
@@ -62,6 +64,9 @@
 	<script type="text/javascript" src="./js/handlebars-v4.0.2.js"></script>
 	<script src="https://cdn.wilddog.com/js/client/current/wilddog.js"></script>
 	<script type="text/javascript" src="./js/AS.js"></script>
+	<script type="text/javascript" src="./js/sync.js"></script>
+	<script type="text/javascript" src="./js/store.js"></script>
+	<script type="text/javascript" src="./js/task.js"></script>
 	<script type="text/javascript" src="./js/base.js"></script>
 	
 </body>

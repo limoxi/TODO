@@ -42,14 +42,14 @@
 	float: right;
 	margin-left: 10px;
 }
-.a-tap .a-top-time{
+.a-tap .a-tap-time{
 	font-style: italic;
 	position: absolute;
     margin-top: 110px;
     margin-left: 145px;
     font-size: 12px;
 }
-.a-tap-text{
+.a-tap-content{
 	display: inline-flex;
 }
 .a-tap-new{
