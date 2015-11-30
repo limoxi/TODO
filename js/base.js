@@ -1,4 +1,182 @@
 
+//与野狗云同步 https://itodo.wilddogio.com
+function Sync(url){
+	this.dog = new Wilddog(url);
+	this.user_id = uuid;
+	this.storeVersion = window.localStorage.getItem('version') || 0;
+}
+Sync.prototype = {
+	sync: function(){
+		var that = this;
+		that.dog.child(that.user_id+'/version').once(function(obj){
+			var version = obj.val();
+			if(that.storeVersion != version){
+				if(that.storeVersion > version){
+					var uploadData = {};
+					uploadData[that.user_id] = {
+						'version': that.storeVersion,
+						'todoData': window.localStorage.getItem('todoData'),
+						'finishedData': window.localStorage.getItem('finishedData')
+					}
+					that.dog.update(uploadData);
+
+				}else{
+					that.dog.child(that.user_id).once(function(obj){
+						var downData = obj.val();
+					});
+				}
+			}
+		});
+	}
+};
+
+function Store(container, tmpl){
+	var storage = window.localStorage;
+	if(storage.getItem('todoReady') !== 'true') {
+		storage.clear();
+		storage.setItem('todoReady', true);
+	}
+	this.notifyIcon = '/images/logo.jpg';
+	this.$container = $(container);
+	var tmplStr = $(tmpl).html();
+	this.template = Handlebars.compile(tmplStr);
+	this._data = JSON.parse(storage.getItem('todoData') || '{}');
+	this.timeThreshold = JSON.parse(storage.getItem('observer') || '{}');
+
+	this._saveData = function(){
+		storage.setItem('todoData', JSON.stringify(this._data))
+	};
+	//绑定工具事件
+	var that = this;
+	this.editting = false;
+	this.$container.delegate('.a-tap-header span', 'click', function(){
+		var dataKey = $(this).parents('.a-tap').attr('data-key');
+		if($(this).hasClass('a-tap-delete')){
+			//删除
+			that.remove(dataKey);
+		}else if($(this).hasClass('a-tap-done')){
+			//完成
+			var content = $(this).parent().siblings('.a-tap-text').html();
+			finishedStore.set(dataKey, content);
+			that.remove(dataKey);
+		}else if($(this).hasClass('a-tap-edit')){
+			//编辑
+			$('.a-tap-new').val(that.get(dataKey)).focus();
+			that.editting = true;
+			that.edittingKey = dataKey;
+		}else if($(this).hasClass('a-tap-flash')){
+			$(this).parent().parent().toggleClass('animation-flash');
+			$(this).attr('data-original-title','取消关注');
+			if(!$(this).parent().parent().hasClass('animation-flash')){
+				$(this).attr('data-original-title','关注');
+			}
+		}
+	});
+	//初始化数据
+	var tapArray = [],
+		temKeyArray = [];
+	for(var key in this._data){
+		tapArray.push(this.template({text: this._data[key], time: key}));
+		temKeyArray.push(key);
+	}
+	this.$container.append(tapArray.join(''));
+	this.keyArray = temKeyArray;
+	this.startTimer();
+	
+	this.checkStatus();
+}
+Store.prototype = {
+	startTimer: function(){
+		var that = this;
+		var observerTimer = setting.get('timer');
+		if(observerTimer){
+			observerTimer = parseInt(observerTimer);
+		}else{
+			observerTimer = 120;
+		}
+		console.log(observerTimer);
+		if(this.timer) this.stopTimer();
+		this.timer = window.setInterval(function(){
+			that.checkStatus.call(that);
+		}, observerTimer * 1000);
+	},
+	get: function(key){
+		return this._data[key];
+	},
+	set: function(key, value, action){
+		this._data[key] = value;
+		!action && this.$container.append(this.template({text: value, time: key}));
+		this._saveData();
+		this.keyArray.push(key);
+		this.$container.find('[data-toggle="tooltip"]').tooltip();
+	},
+	remove: function(key){
+		delete this._data[key];
+		this.keyArray.shift(key);
+		this._saveData();
+		this.$container.find('a[data-key="'+key+'"]').remove();
+	},
+	setTimeThreshold: function(timeData){
+		this.timeThreshold = timeData;
+	},
+	checkStatus: function(){
+		var now = new Date();
+		var needNotify = false;
+		for(var i in this.keyArray){
+			var key = this.keyArray[i];
+			var dif = (now - dateTransfer(key))/1000/60;
+			var tempColor = 'whitesmoke';
+			for(var min in this.timeThreshold){
+				var bgColor = this.$container.find('a[data-key="'+key+'"]').css('background-color');
+				var hex = rgbToHex(bgColor);
+				if(dif >= min && hex!=this.timeThreshold[min]){
+					needNotify = true;
+					tempColor = this.timeThreshold[min];
+				}
+			}
+			this.$container.find('a[data-key="'+key+'"]').css('background', tempColor);
+		}
+		needNotify && AS.notify('task');
+	},
+	stopTimer: function(){
+		var that = this;
+		window.clearInterval(that.timer);
+		this.timer = void 0;
+	}
+};
+
+
+function FinishedStore(container, tmpl){
+	var storage = window.localStorage;
+	if(storage.getItem('todoReady') !== 'true') return;
+
+	this.$container = $(container);
+	var tmplStr = $(tmpl).html();
+	this.template = Handlebars.compile(tmplStr);
+	this._data = JSON.parse(storage.getItem('finishedData') || '{}');
+
+	this._saveData = function(){
+		storage.setItem('finishedData', JSON.stringify(this._data))
+	};
+	//初始化数据
+	var tapArray = [];
+	for(var key in this._data){
+		tapArray.push(this.template({text: this._data[key], time: key}));
+	}
+	this.$container.append(tapArray.join(''));
+}
+FinishedStore.prototype = {
+	get: function(key){
+		return this._data[key];
+	},
+	set: function(key, value){
+		this._data[key] = value;
+		this.$container.append(this.template({text: value, time: key}));
+		this._saveData();
+	},
+};
+>>>>>>> origin/master
+
 //设置数据
 var Settings = function(name){
 	var setting = window.localStorage.getItem(name);
