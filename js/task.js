@@ -8,13 +8,13 @@ function Task(options){
 	options = AS.extend({
 		'tid': d.getTime(),
 		'content': '没有任务描述',
-		'_flash': false,
+		'flash': false,
 		'is_finished': false,
 		'created_at': d.toLocaleString()
 	}, options);
 	/* 属性 */
 	this.tid = options.tid; //任务id
-	this._flash = options._flash; //是否已关注
+	this.flash = options.flash; //是否已关注
 	this.is_finished = options.is_finished; //是否已完成
 	this.created_at = options.created_at; //任务创建时间
 	this.title = options.title || ('TODO_TASK_'+this.tid); //任务标题
@@ -31,10 +31,10 @@ function Task(options){
 	//监听对象变动
 	var that = this;
 	Object.observe(this, function(changes){
-		var changeType = changes[0].type;
-		var changeAttr = changes[0].name;
-		var changeOldvalue = changes[0].oldValue;
-		console.log('task: changeType='+changeType+' '+changeAttr+'='+changes[0].object[changeAttr]);
+		var change = changes[0],
+			changeType = change.type;
+			changeAttr = change.name;
+		console.log('taskChange >>> changeType='+changeType+' '+changeAttr+'='+changes[0].object[changeAttr]);
 		if('update' === changeType){
 			that._store(false);
 		}else{
@@ -56,16 +56,21 @@ Task.prototype = {
 			$tmpl_html = $('#tap-template');
 			$container = $('.a-list');
 		}
+		var template = Handlebars.compile($tmpl_html.html());
+		var html = template(this.toJSON());
 		if(newData){
-			var template = Handlebars.compile($tmpl_html.html());
-			$container.append(template(this.toJSON()));
+			//新任务，增加dom
+			$container.append(html);
 			$('[data-toggle="tooltip"]').tooltip();
+		}else{
+			//修改任务，刷新dom
+			$container.find('a[data-key="'+this.tid+'"]').replaceWith(html);
 		}
 		
 		return this;
 	},
 	setFlash: function(bool){
-		this._flash = !!bool;
+		this.flash = !!bool;
 		return this;
 	},
 	finish: function(){
@@ -76,7 +81,7 @@ Task.prototype = {
 		var input_arr = input.split('::');
 		var len = input_arr.length;
 		var title, content;
-		if(len = 1){
+		if(len == 1){
 			this.content = input.trim();
 		}else if(len >2){
 			this.title = input_arr[0].trim();
@@ -87,12 +92,14 @@ Task.prototype = {
 			this.title = input_arr[0].trim();
 			this.content = input_arr[1].trim();
 		}
+		console.log(this.title, this.content);
+		this._editting = true;
 		return this;
 	},
 	toJSON: function(){
 		return {
 			"tid": this.tid,
-			"_flash": this._flash,
+			"flash": this.flash,
 			"is_finished": this.is_finished,
 			"created_at": this.created_at,
 			"title": this.title,
