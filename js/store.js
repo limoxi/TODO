@@ -144,4 +144,60 @@
 	};
 })(AS, window.localStorage);
 
-//封装设置功能
+//封装本地存储, 统一存储和获取的数据类型，免得混乱
+(function(AS, storage){
+	AS.VALUE_TYPE = {
+		'str': 0,
+		'num': 1,
+		'json': 2
+	};
+	var transformGet = function(type, key, defaultValue){
+		var value = storage.getItem(key);
+		var returnValue = defaultValue;
+		if(!value || AS.isEmptyObject(value)) return returnValue;
+		switch(type){
+			case 0: 
+				returnValue = value;
+				break;
+			case 1:
+				returnValue = parseInt(value);
+				break;
+			case 2:
+				returnValue = JSON.parse(value);
+				break;
+			default:
+				returnValue = value;
+				break;
+		}
+		return returnValue;
+	};
+	var transformSet = function(){
+
+	};
+	var store = {
+		get: function(type, key, defaultValue){
+			if(!key) return;
+			type = type || AS.VALUE_TYPE['str'];
+			return transformGet(type, key, defaultValue);
+		},
+		set: function(key, value){
+			if(!key || (!value && value != 0)) return;
+			switch(typeof value){
+				case 'string':
+					storage.setItem(key, value);
+					break;
+				case 'number':
+					storage.setItem(key, value);
+					break;
+				case 'object':
+					storage.setItem(key, JSON.stringify(value));
+					break;
+			}
+		},
+		clear: function(){
+			storage.clear();
+			window.location.reload(true);
+		}
+	};
+	AS.storage = store;
+})(AS, window.localStorage);

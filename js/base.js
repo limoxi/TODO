@@ -114,6 +114,11 @@ function initTools(){
 			$('.a-observer-color').val(color);
 		});
 	});
+	//同步
+	$('.a-sync').on('click', function(){
+		console.log('同步中...');
+		AS.sync.sync();
+	});
 
 	//消息条
 	var type_desc = {

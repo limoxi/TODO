@@ -318,8 +318,16 @@
 		return strArr.join('');
 	}
 
-	/* 内部使用的工具方法 --end */
+    //查询是否为空
+    function isEmptyObject(obj){
+        for(var i in obj){
+            return false;
+        }
+        return true;
+    }
 
+	/* 内部使用的工具方法 --end */
+    AS.isEmptyObject = isEmptyObject;
 	window.AS = AS;
 
 })(window);
