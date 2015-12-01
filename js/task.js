@@ -47,7 +47,6 @@ function Task(options){
 
 Task.prototype = {
 	render: function(newData){
-		console.log('=====');
 		var $tmpl_html, $container;
 		if(this.is_finished){
 			$tmpl_html = $('#finished-tap-template');
@@ -61,12 +60,11 @@ Task.prototype = {
 		if(newData){
 			//新任务，增加dom
 			$container.append(html);
-			$('[data-toggle="tooltip"]').tooltip();
 		}else{
 			//修改任务，刷新dom
 			$container.find('a[data-key="'+this.tid+'"]').replaceWith(html);
 		}
-		
+		$('[data-toggle="tooltip"]').tooltip();
 		return this;
 	},
 	setFlash: function(bool){
@@ -92,7 +90,6 @@ Task.prototype = {
 			this.title = input_arr[0].trim();
 			this.content = input_arr[1].trim();
 		}
-		console.log(this.title, this.content);
 		this._editting = true;
 		return this;
 	},

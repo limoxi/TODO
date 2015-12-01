@@ -51,6 +51,8 @@ function bindListeners(){
 			//编辑
 			$('.a-tap-new').val(task.title+"::"+task.content).attr('data-target', tid).focus();
 		}else if($(this).hasClass('a-tap-flash')){
+			//关注
+			task.setFlash(!$(this).hasClass('action'));
 			$(this).toggleClass('action').parent().parent().toggleClass('animation-flash');
 		}
 	});

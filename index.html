@@ -37,12 +37,12 @@
 	</div>
 	<!-- template -->
 	<script id="tap-template" type="text/x-handlebars-template">
-		<a class="list-group-item a-tap {{#if is_finished}}animation-flash{{/if}}" data-key="{{ tid }}">
+		<a class="list-group-item a-tap {{#if flash}}animation-flash{{/if}}" data-key="{{ tid }}">
 			<p class="a-tap-header">
 				<span class="a-tap-delete glyphicon glyphicon-remove" data-toggle="tooltip" title="删除"></span>
 				<span class="a-tap-done glyphicon glyphicon-ok" data-toggle="tooltip" title="完成"></span>
 				<span class="a-tap-edit glyphicon glyphicon-wrench" data-toggle="tooltip" title="编辑"></span>
-				<span class="a-tap-flash glyphicon glyphicon-flash {{#if _flash}}active{{/if}}" data-toggle="tooltip" title="关注"></span>
+				<span class="a-tap-flash glyphicon glyphicon-flash {{#if flash}}action{{/if}}" data-toggle="tooltip" title="关注"></span>
 			</p>
 			<p class="a-tap-time">{{ created_at }}</p>
 			<h4 class="a-tap-title">{{ title }}</h4>
