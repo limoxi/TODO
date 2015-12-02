@@ -3,6 +3,7 @@ $(function(){
 	AS.store.init($('.a-list'));
 	initTools();
 	bindListeners();
+	$('.a-uuid-container').find('input').val(AS.storage.get(AS.VALUE_TYPE['str'], 'uuid'));
 });
 
 function bindListeners(){

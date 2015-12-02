@@ -327,7 +327,15 @@
     }
 
 	/* 内部使用的工具方法 --end */
-    AS.isEmptyObject = isEmptyObject;
+    AS.extend(AS, {
+        isFunction: isFunction,
+        isString: isString,
+        isArray: isArray,
+        array_remove: array_remove,
+        array_contains: array_contains,
+        string_trimAll: string_trimAll,
+        isEmptyObject: isEmptyObject
+    });
 	window.AS = AS;
 
 })(window);
@@ -337,7 +345,7 @@
     AS.VALUE_TYPE = {
         'str': 0,
         'num': 1,
-        'json': 2
+        'obj': 2
     };
     var transformGet = function(type, key, defaultValue){
         var value = storage.getItem(key);
@@ -379,9 +387,16 @@
                     break;
             }
         },
-        clear: function(){
+        save: function(data){
+            if(AS.isString(data)) data = JSON.parse(data);
+            if(!data || AS.isEmptyObject(data)) return;
+            for(var key in data){
+                store.set(key, data[key]);
+            }
+        },
+        clear: function(refresh){
             storage.clear();
-            window.location.reload(true);
+            refresh && window.location.reload(true);
         }
     };
     AS.storage = store;

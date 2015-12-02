@@ -3,18 +3,14 @@
 *
 */
 
-;(function (AS, storage, undefined){
-	if(!storage){
-		alert('此浏览器不支持本地存储！！');
-		return;
-	}
+;(function (AS, undefined){
 	if(!AS || !AS.sync){
 		console.error('store.js依赖AS.js和sync.js');
 		return;
 	}
-	if(storage.getItem('todoReady') !== 'true') {
-		storage.clear();
-		storage.setItem('todoReady', true);
+	if(AS.storage.get(AS.VALUE_TYPE['str'], 'todoReady') !== 'true') {
+		AS.storage.clear();
+		AS.storage.set('todoReady', true);
 	}
 
 	AS.notify = AS.noop;
@@ -23,24 +19,22 @@
 	AS.TID2TASK = {};
 	AS.TID_ARRAY = [];
 	AS.settings = {
-		timerFrequency: parseInt(storage.getItem('timer') || 20),
-		colorfulStatus: JSON.parse(storage.getItem('observer') || '{}')
+		timerFrequency: AS.storage.get(AS.VALUE_TYPE['num'], 'timer', 20),
+		colorfulStatus: AS.storage.get(AS.VALUE_TYPE['obj'], 'observer', {})
 	};
 	var timer;
 	AS.store = {
 		setTimerFrequency: function(min){
 			AS.settings.timerFrequency = min;
-			storage.setItem('timer', min);
+			AS.storage.set('timer', min);
 			AS.store.startTimer();
 		},
 		setColorfulStatus: function(min, color){
 			AS.settings.colorfulStatus[min] = color;
-			storage.setItem('observer', JSON.stringify(AS.settings.colorfulStatus));
+			AS.storage.set('observer', AS.settings.colorfulStatus);
 		},
 		get: function(mode){
-			var str = storage.getItem(mode);
-			if(!str) return {};
-			return JSON.parse(str);
+			return AS.storage.get(AS.VALUE_TYPE['obj'], mode, {});
 		},
 		add: function(options){
 			var newTask = new Task(options);
@@ -49,13 +43,13 @@
 		set: function(mode, tid, data){
 			var modeData = AS.store.get(mode);
 			modeData[tid] = data;
-			storage.setItem(mode, JSON.stringify(modeData));
+			AS.storage.set(mode, modeData);
 		},
 		remove: function(mode, tid){
 			var todoData = AS.store.get(AS.TODO_DATA);
 			var returnData = todoData[tid];
 			delete todoData[tid];
-			storage.setItem(mode, JSON.stringify(todoData));
+			AS.storage.set(mode, todoData);
 			AS.TID_ARRAY.pop(tid);
 			return returnData
 		},
@@ -112,6 +106,7 @@
 		      		}
 		    	});
 			}
+			AS.storage.set('storageChanged', 'false');
 		},
 		checkTaskStatus: function(){
 			var now = new Date();
@@ -142,4 +137,4 @@
 			if(timer) window.clearInterval(AS.store.checkTaskStatus);
 		}
 	};
-})(AS, window.localStorage);
+})(AS);

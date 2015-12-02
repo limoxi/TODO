@@ -35,7 +35,7 @@ function Task(options){
 			changeType = change.type;
 			changeAttr = change.name;
 		console.log('taskChange >>> changeType='+changeType+' '+changeAttr+'='+changes[0].object[changeAttr]);
-		if('update' === changeType && !that.is_finisher){
+		if('update' === changeType && !that.is_finished){
 			that._store(false);
 		}else{
 			that._store(true);
@@ -57,7 +57,6 @@ Task.prototype = {
 		}
 		var template = Handlebars.compile($tmpl_html.html());
 		var html = template(this.toJSON());
-		console.log(html);
 		if(newData){
 			//新任务，增加dom
 			$container.append(html);
@@ -66,6 +65,7 @@ Task.prototype = {
 			$container.find('a[data-key="'+this.tid+'"]').replaceWith(html);
 		}
 		$('[data-toggle="tooltip"]').tooltip();
+		AS.storage.set('storageChanged', 'true'); //标志本地数据已经改变
 		return this;
 	},
 	setFlash: function(bool){
