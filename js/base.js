@@ -22,7 +22,7 @@ function bindListeners(){
 		}else{
 			var inputArr = input.split('::');
 			var options = {};
-			if(inputArr.length = 1){
+			if(inputArr.length == 1){
 				options['content'] = input;
 			}else{
 				options['title'] = inputArr[0];

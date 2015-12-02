@@ -35,7 +35,7 @@ function Task(options){
 			changeType = change.type;
 			changeAttr = change.name;
 		console.log('taskChange >>> changeType='+changeType+' '+changeAttr+'='+changes[0].object[changeAttr]);
-		if('update' === changeType){
+		if('update' === changeType && !that.is_finisher){
 			that._store(false);
 		}else{
 			that._store(true);
@@ -50,13 +50,14 @@ Task.prototype = {
 		var $tmpl_html, $container;
 		if(this.is_finished){
 			$tmpl_html = $('#finished-tap-template');
-			$container = $('.a-slider-container');
+			$container = $('.a-finished-list');
 		}else{
 			$tmpl_html = $('#tap-template');
 			$container = $('.a-list');
 		}
 		var template = Handlebars.compile($tmpl_html.html());
 		var html = template(this.toJSON());
+		console.log(html);
 		if(newData){
 			//新任务，增加dom
 			$container.append(html);
