@@ -2,10 +2,6 @@
 <html lang="zh-CN">
 <head>
 	<title>T O D O !</title>
-<<<<<<< HEAD
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-=======
->>>>>>> refs/remotes/origin/master
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<link id="page_favicon" href="/favicon.ico" rel="icon" type="image/x-icon">
 	<link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
@@ -16,13 +12,10 @@
 	
 </head>
 <body>
-<<<<<<< HEAD
-=======
 	<div class="input-group a-uuid-container">
 		<span class="input-group-addon" id="user_id"><i class="glyphicon glyphicon-user"></i></span>
 		<input type="text" class="form-control" aria-describedby="user_id" readonly >
 	</div>
->>>>>>> refs/remotes/origin/master
 	<div class="container-fluid a-container">
 		<div class="list-group a-list"></div>
 	</div>
@@ -31,11 +24,7 @@
 	</div>
 	<div class="footer container-fluid">
 		<label>
-<<<<<<< HEAD
-			<input type="text" class="a-tap-new" placeholder="需要做些什么...(50字限制)" maxlength="100">
-=======
 			<input type="text" data-target="" class="a-tap-new" placeholder="需要做些什么...(50字限制)" maxlength="100">
->>>>>>> refs/remotes/origin/master
 		</label>
 		<div class="a-settings">
 			<span class="glyphicon glyphicon-refresh a-sync"></span>
@@ -51,41 +40,24 @@
 	</div>
 	<!-- template -->
 	<script id="tap-template" type="text/x-handlebars-template">
-<<<<<<< HEAD
-		<a class="list-group-item a-tap" data-key="{{ time }}">
-=======
 		<a class="list-group-item a-tap {{#if flash}}animation-flash{{/if}}" data-key="{{ tid }}">
->>>>>>> refs/remotes/origin/master
 			<p class="a-tap-header">
 				<span class="a-tap-delete glyphicon glyphicon-remove" data-toggle="tooltip" title="删除"></span>
 				<span class="a-tap-done glyphicon glyphicon-ok" data-toggle="tooltip" title="完成"></span>
 				<span class="a-tap-edit glyphicon glyphicon-wrench" data-toggle="tooltip" title="编辑"></span>
-<<<<<<< HEAD
-				<span class="a-tap-flash glyphicon glyphicon-flash" data-toggle="tooltip" title="关注"></span>
-			</p>
-			<p class="a-top-time">{{ time }}</p>
-			<p class="a-tap-text">{{ text }}</p>
-=======
 				<span class="a-tap-flash glyphicon glyphicon-flash {{#if flash}}action{{/if}}" data-toggle="tooltip" title="关注"></span>
 			</p>
 			<p class="a-tap-time">{{ created_at }}</p>
 			<h4 class="a-tap-title">{{ title }}</h4>
 			<p class="a-tap-content">{{ content }}</p>
->>>>>>> refs/remotes/origin/master
 			
 		</a>
 	</script>
 	<script id="finished-tap-template" type="text/x-handlebars-template">
-<<<<<<< HEAD
-		<a class="list-group-item a-finished-tap" data-key="{{ time }}">
-			<del class="a-finished-tap-text">{{ text }}</del>
-			<p class="a-finished-top-time">{{ time }}</p>
-=======
 		<a class="list-group-item a-finished-tap" data-key="{{ tid }}">
 			<del class="a-finished-tap-title">{{ title }}</del>
 			<h5 class="a-finished-tap-content">{{ content }}</h5>
 			<p class="a-finished-tap-time">{{ created_at }}</p>
->>>>>>> refs/remotes/origin/master
 		</a>
 	</script>
 	
@@ -95,16 +67,11 @@
 	<script type="text/javascript" src="./js/handlebars-v4.0.2.js"></script>
 	<script src="https://cdn.wilddog.com/js/client/current/wilddog.js"></script>
 	<script type="text/javascript" src="./js/AS.js"></script>
-<<<<<<< HEAD
-	<script type="text/javascript" src="./js/base.js"></script>
-	
-=======
 	<script type="text/javascript" src="./js/sync.js"></script>
 	<script type="text/javascript" src="./js/store.js"></script>
 	<script type="text/javascript" src="./js/task.js"></script>
 	<script type="text/javascript" src="./js/base.js"></script>
 	
 	
->>>>>>> refs/remotes/origin/master
 </body>
 </html>

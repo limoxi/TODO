@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-.btn-custom{
-
-=======
 .a-uuid-container{
 	width: 170px;
->>>>>>> refs/remotes/origin/master
 }
 .action{
 	color: #CC0033;
@@ -47,25 +42,17 @@
 	float: right;
 	margin-left: 10px;
 }
-<<<<<<< HEAD
-.a-tap .a-top-time{
-=======
 .a-tap .a-tap-time{
->>>>>>> refs/remotes/origin/master
 	font-style: italic;
 	position: absolute;
     margin-top: 110px;
     margin-left: 145px;
     font-size: 12px;
 }
-<<<<<<< HEAD
-.a-tap-text{
-=======
 .a-tap-title{
 	word-break: break-all;
 }
 .a-tap-content{
->>>>>>> refs/remotes/origin/master
 	display: inline-flex;
 	word-break: break-all;
 }
@@ -88,11 +75,7 @@
 	position: fixed;
 	top: 0;
 	right: 0;
-<<<<<<< HEAD
-	width: 165px;
-=======
 	width: 180px;
->>>>>>> refs/remotes/origin/master
 	height: 85%;
 	padding: 0;
 	font-size: 12px;

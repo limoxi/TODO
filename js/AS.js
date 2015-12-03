@@ -318,13 +318,6 @@
 		return strArr.join('');
 	}
 
-<<<<<<< HEAD
-	/* 内部使用的工具方法 --end */
-
-	window.AS = AS;
-
-})(window);
-=======
     //查询是否为空
     function isEmptyObject(obj){
         for(var i in obj){
@@ -408,4 +401,3 @@
     };
     AS.storage = store;
 })(AS, window.localStorage);
->>>>>>> refs/remotes/origin/master
