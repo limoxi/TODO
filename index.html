@@ -5,17 +5,21 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<link id="page_favicon" href="/favicon.ico" rel="icon" type="image/x-icon">
 	<link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="./css/bootstrap-theme.min.css">
-	<link rel="stylesheet" type="text/css" href="./css/bootstrap-switch.min.css">
 	<link rel="stylesheet" type="text/css" href="./css/base.css">
 	<link rel="stylesheet" type="text/css" href="./css/animate.css">
 	
 </head>
 <body>
-	<div class="input-group a-uuid-container">
-		<span class="input-group-addon" id="user_id"><i class="glyphicon glyphicon-user"></i></span>
-		<input type="text" class="form-control" aria-describedby="user_id" readonly >
+	<div class="container-fluid a-guide">
+		<div class="a-mask"></div>
+		<div class="input-group a-uuid-container">
+			<span class="input-group-addon" id="user_id"><i class="glyphicon glyphicon-user"></i></span>
+			<input type="text" class="form-control" aria-describedby="user_id">
+			<button type="button" class="a-button a-uuid-checker">确认</button>
+			<button type="button" class="a-button a-uuid-generator">生成</button>
+		</div>
 	</div>
+	
 	<div class="container-fluid a-container">
 		<div class="list-group a-list"></div>
 	</div>
@@ -63,7 +67,6 @@
 	
 	<script type="text/javascript" src="./js/jquery-2.1.4.js"></script>
 	<script type="text/javascript" src="./js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="./js/bootstrap-switch.min.js"></script>
 	<script type="text/javascript" src="./js/handlebars-v4.0.2.js"></script>
 	<script src="https://cdn.wilddog.com/js/client/current/wilddog.js"></script>
 	<script type="text/javascript" src="./js/AS.js"></script>

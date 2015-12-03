@@ -1,5 +1,20 @@
+.a-mask{
+	position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+    background: rgba(0,0,0,0.5);
+    margin: 0 -10px;
+}
 .a-uuid-container{
-	width: 170px;
+	width: 180px;
+    height: 80px;
+    z-index: 2;
+    top: 30%;
+    position: absolute;
+}
+.a-guide{
+	display: none;
 }
 .action{
 	color: #CC0033;
