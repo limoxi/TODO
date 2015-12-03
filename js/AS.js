@@ -318,8 +318,94 @@
 		return strArr.join('');
 	}
 
+<<<<<<< HEAD
 	/* 内部使用的工具方法 --end */
 
 	window.AS = AS;
 
 })(window);
+=======
+    //查询是否为空
+    function isEmptyObject(obj){
+        for(var i in obj){
+            return false;
+        }
+        return true;
+    }
+
+	/* 内部使用的工具方法 --end */
+    AS.extend(AS, {
+        isFunction: isFunction,
+        isString: isString,
+        isArray: isArray,
+        array_remove: array_remove,
+        array_contains: array_contains,
+        string_trimAll: string_trimAll,
+        isEmptyObject: isEmptyObject
+    });
+	window.AS = AS;
+
+})(window);
+
+//封装本地存储, 统一存储和获取的数据类型，免得混乱
+(function(AS, storage){
+    AS.VALUE_TYPE = {
+        'str': 0,
+        'num': 1,
+        'obj': 2
+    };
+    var transformGet = function(type, key, defaultValue){
+        var value = storage.getItem(key);
+        var returnValue = defaultValue;
+        if(!value || AS.isEmptyObject(value)) return returnValue;
+        switch(type){
+            case 0: 
+                returnValue = value;
+                break;
+            case 1:
+                returnValue = parseInt(value);
+                break;
+            case 2:
+                returnValue = JSON.parse(value);
+                break;
+            default:
+                returnValue = value;
+                break;
+        }
+        return returnValue;
+    };
+    var store = {
+        get: function(type, key, defaultValue){
+            if(!key) return;
+            type = type || AS.VALUE_TYPE['str'];
+            return transformGet(type, key, defaultValue);
+        },
+        set: function(key, value){
+            if(!key || (!value && value != 0)) return;
+            switch(typeof value){
+                case 'string':
+                    storage.setItem(key, value);
+                    break;
+                case 'number':
+                    storage.setItem(key, value);
+                    break;
+                case 'object':
+                    storage.setItem(key, JSON.stringify(value));
+                    break;
+            }
+        },
+        save: function(data){
+            if(AS.isString(data)) data = JSON.parse(data);
+            if(!data || AS.isEmptyObject(data)) return;
+            for(var key in data){
+                store.set(key, data[key]);
+            }
+        },
+        clear: function(refresh){
+            storage.clear();
+            refresh && window.location.reload(true);
+        }
+    };
+    AS.storage = store;
+})(AS, window.localStorage);
+>>>>>>> refs/remotes/origin/master
