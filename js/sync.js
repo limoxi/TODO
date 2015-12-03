@@ -1,18 +1,39 @@
 //与野狗云同步 https://itodo.wilddogio.com
 
 (function(AS){
-	var wilddogUrl = 'https://itodo.wilddogio.com';
-	var uuid = AS.storage.get(AS.VALUE_TYPE['str'], 'uuid', new Date().getTime().toString());
-	AS.storage.set('uuid', uuid);
+	var wilddogUrl = 'https://itodo.wilddogio.com',
+		dog = new Wilddog(wilddogUrl),
+		remoteVersionRef,
+		remoteDataRef;
 	var storeVersion = AS.storage.get(AS.VALUE_TYPE['num'], 'version', 1);
 	AS.storage.set('version', storeVersion);
-	var dog = new Wilddog(wilddogUrl);
-	var remoteVersionRef = dog.child(uuid + '/version');
-	var remoteDataRef = dog.child(uuid + '/data');
 	var syncManager = {
-		sync: function(){
+		init: function(action, uuid, failCallback){
+			if(action){
+				dog.once('value', function(obj){
+					console.log(obj.child(uuid).exists());
+					if(obj.child(uuid).exists()){
+						AS.storage.set('uuid', uuid);
+						remoteVersionRef = dog.child(uuid + '/version');
+						remoteDataRef = dog.child(uuid + '/data');
+						remoteVersionRef.once('value', function(obj){
+							if(obj.val()){
+								syncManager.pull(obj.val());
+							}
+						});
+					}else{
+						failCallback();
+					}
+				});
+			}else{
+				remoteVersionRef = dog.child(uuid + '/version');
+				remoteDataRef = dog.child(uuid + '/data');
+			}
 			
+		},
+		sync: function(){
 			if('true' === AS.storage.get(AS.VALUE_TYPE['str'], 'storageChanged')){ //本地一旦改变，版本号自增
+				storeVersion = AS.storage.get(AS.VALUE_TYPE['num', 'version']);
 				AS.storage.set('version', ++storeVersion);
 			}
 			remoteVersionRef.once('value', function(obj){

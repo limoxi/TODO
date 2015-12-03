@@ -8,10 +8,6 @@
 		console.error('store.js依赖AS.js和sync.js');
 		return;
 	}
-	if(AS.storage.get(AS.VALUE_TYPE['str'], 'todoReady') !== 'true') {
-		AS.storage.clear();
-		AS.storage.set('todoReady', true);
-	}
 
 	AS.notify = AS.noop;
 	AS.TODO_DATA = 'todoData';
@@ -30,7 +26,7 @@
 			AS.store.startTimer();
 		},
 		setColorfulStatus: function(min, color){
-			AS.settings.colorfulStatus[min] = color;
+			AS.settings.colorfulStatus[min+''] = color;
 			AS.storage.set('observer', AS.settings.colorfulStatus);
 		},
 		get: function(mode){
@@ -66,6 +62,7 @@
 			var finishedData = AS.store.get(AS.DONE_DATA);
 			for(var tid in todoData){
 				var data = todoData[tid];
+				console.log(data)
 				new Task(data);
 				AS.TID_ARRAY.push(tid);
 			}
