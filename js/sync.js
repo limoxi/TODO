@@ -33,9 +33,10 @@
 		},
 		sync: function(){
 			if('true' === AS.storage.get(AS.VALUE_TYPE['str'], 'storageChanged')){ //本地一旦改变，版本号自增
-				storeVersion = AS.storage.get(AS.VALUE_TYPE['num', 'version']);
+				storeVersion = AS.storage.get(AS.VALUE_TYPE['num'], 'version');
 				AS.storage.set('version', ++storeVersion);
 			}
+			
 			remoteVersionRef.once('value', function(obj){
 				var version = obj.val();
 				version = version? parseInt(version): false;
@@ -56,6 +57,7 @@
 				'timer': AS.storage.get(AS.VALUE_TYPE['num'], 'timer', 30),
 			}
 			remoteDataRef.update(uploadData);
+			console.log(storeVersion);
 			remoteVersionRef.set(storeVersion);
 			console.log('同步完成，上传数据');
 		},

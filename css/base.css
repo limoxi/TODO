@@ -7,11 +7,41 @@
     margin: 0 -10px;
 }
 .a-uuid-container{
-	width: 180px;
-    height: 80px;
+	width: 400px;
+    height: 50px;
     z-index: 2;
-    top: 30%;
+    margin: 0 auto;
+    margin-top: 400px;
+    position: relative;
+}
+.a-guide-logo{
+	width: 150px;
+    height: 150px;
+    border-radius: 90px;
     position: absolute;
+    margin-top: -200px;
+    margin-left: 80px;
+    border: 4px solid white;
+    box-shadow: 0px 0px 30px paleturquoise;
+}
+.a-user-icon{
+	width: 50px;
+	font-size: 20px;
+}
+.a-button{
+	width: 70px;
+    font-size: 18px;
+    cursor: pointer;
+}
+.a-button:hover{
+	background: #555;
+	color: whitesmoke;
+	border: none;
+}
+.a-user-idbox{
+	height: 50px;
+    line-height: 50px;
+    font-size: 24px;
 }
 .a-guide{
 	display: none;
@@ -123,13 +153,14 @@
 	color: #CC0033;
 }
 .a-alert{
-	display: inline-block;
-	opacity: 0;
+	display: none;
     position: fixed;
-    left: 40%;
-    top:0;
-    min-width: 350px;
+    top: 5px;
+    left: 0;
+    min-width: 280px;
     text-align: center;
+    padding: 10px;
+    z-index: 3;
 }
 .a-observer-color-picker span{
 	display: inline-block;

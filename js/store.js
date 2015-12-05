@@ -72,6 +72,7 @@
 			}
 			//初始化设置
 			AS.store.checkTaskStatus();
+			AS.store.startTimer();
 			var content = '未开启桌面通知功能';
 			if(window.Notification !== 'denied'){
 				window.Notification.requestPermission(function(permission){
@@ -127,7 +128,6 @@
 		},
 		startTimer: function(){
 			if(timer) AS.store.stopTimer();
-			console.log(parseInt(AS.settings.timerFrequency)*1000);
 			timer = window.setInterval(AS.store.checkTaskStatus, parseInt(AS.settings.timerFrequency)*1000);
 		},
 		stopTimer: function(){

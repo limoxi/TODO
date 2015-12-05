@@ -1,29 +1,34 @@
-
+var generatorClicked = false;
 $(function(){
+	init();
+	initToast();
 	var uuid = AS.storage.get(AS.VALUE_TYPE['str'], 'uuid');
 	if(!uuid){
-		console.log('in');
 		$('.a-uuid-checker').on('click', function(){
-			console.log('click');
 			var inputUuid = $('.a-uuid-container').find('input').val();
 			if(inputUuid.trim() === ''){
-				alert('还没有身份id可以点击“生成”');
+				AS.toast('还没有身份id可以点击“生成”', 'error', 5);
 				return;
-			} 
-			AS.sync.init(true, inputUuid, function(){
-				$('.a-uuid-container').find('input').val('');
-				alert('id不存在，还没有身份id可以点击“生成”');
-			});
+			}
+			if(checkGenedUuid(inputUuid)){
+				if(generatorClicked){
+					generatorClicked = false;
+					AS.storage.set('uuid', inputUuid);
+					AS.sync.init(false, inputUuid);
+					next();
+					$('.a-guide').hide();
+				}else{
+					AS.sync.init(true, inputUuid, function(){
+						$('.a-uuid-container').find('input').val('');
+						AS.toast('id不存在，还没有身份id可以点击“生成”');
+					});
+				}
+			}
 		});
 		$('.a-uuid-generator').on('click', function(){
-			$(this).attr('disabled', true);
+			generatorClicked = true;
 			var genUid = new Date().getTime().toString();
 			$('.a-uuid-container').find('input').val(genUid).attr('readonly', true);
-			AS.storage.set('uuid', genUid);
-			alert('记住您的身份id：'+genUid);
-			AS.sync.init(false, genUid);
-			next();
-			$('.a-guide').hide();
 		});
 		$('.a-guide').show();
 	}else{
@@ -32,10 +37,42 @@ $(function(){
 	}
 });
 
+function init(){
+	//所有按钮行为，在点击后禁用1秒，防止意外连续点击
+	$('.a-button').on('click', function(){
+		var $that = $(this);
+		$that.attr('disabled', true);
+		window.setTimeout(function(){
+			$that.attr('disabled', false);
+		}, 1000);	
+	});
+}
+
 function next(){
 	AS.store.init($('.a-list'));
 	initTools();
 	bindListeners();
+}
+
+/**
+*	检查输入的uuid
+*	uuid只能是日期new Date().getTime()得到的一串数字或字符串
+*/
+function checkGenedUuid(uuid){
+	var errMsg = '请填写已经拥有的身份id或者重新生成';
+	if(!/^[0-9]*$/.test(uuid)){
+		AS.toast(errMsg, 'warn', 5);
+		return;
+	}
+	uuid = parseInt(uuid);
+	var fiveYearsTime = 1000*60*60*24*365*5,
+		nowTime = new Date().getTime();
+	var dif = nowTime - uuid;
+	if(dif > fiveYearsTime || dif <= 0){
+		AS.toast(errMsg, 'warn', 5);
+		return;
+	}
+	return true;
 }
 
 function bindListeners(){
@@ -45,7 +82,6 @@ function bindListeners(){
 		if(input == '' || e.keyCode != 13) return;
 		var datetime = new Date().toLocaleString();
 		var tid = $(this).attr('data-target'), title, content;
-		console.log(tid, '++++++++');
 		if(tid){
 			var task = AS.TID2TASK[tid];
 			task.edit(input);
@@ -152,32 +188,31 @@ function initTools(){
 		console.log('同步中...');
 		AS.sync.sync();
 	});
+	
+}
 
-	//消息条
-	var type_desc = {
-		success: "干得漂亮～",
-		info: "你有新短消息～",
-		warn: "前方高能！",
-		error: "WTF!!",
-		no_tips: " ",
+//消息提示
+function initToast(){
+	var type_class = {
+		success: "alert-success",
+		info: "alert-info",
+		warn: "alert-warning",
+		error: "alert-danger"
 	};
 	var toastTimer,
 		$alert = $('.a-alert'),
-		$alertTitle = $alert.find('.a-alert-title'),
-		$alertMessage = $alert.find('.a-alert-message');
+		$alertMessage = $alert.find('.a-alert-message'),
+		latestClass = "alert-info";
 	AS.toast = function(msg, type, time){
 		if(!msg || msg.trim()==='') return;
-		type = type || "info";
-		time = time || 5;
-		var title = type_desc[type] || "你有新短消息～";
+		useClass = type_class[type] || "alert-info";
+		time = time || 2;
 		window.clearTimeout(toastTimer);
-		$alertTitle.html(title);
 		$alertMessage.html(msg);
-		$alert.css({'opacity':1,'top':'100px'});
-		$alert.addClass('tips_div');
+		$alert.removeClass(latestClass).addClass(useClass).show();
+		latestClass = useClass;
 		toastTimer = window.setTimeout(function(){
-			$alert.css('opacity', 0);
-			$alert.removeClass('tips_div');
+			$alert.hide();
 		}, time*1000);
 	};
 }
