@@ -12,11 +12,12 @@
 <body>
 	<div class="container-fluid a-guide">
 		<div class="a-mask"></div>
-		<div class="input-group a-uuid-container">
-			<span class="input-group-addon" id="user_id"><i class="glyphicon glyphicon-user"></i></span>
-			<input type="text" class="form-control" aria-describedby="user_id">
-			<button type="button" class="a-button a-uuid-checker">确认</button>
-			<button type="button" class="a-button a-uuid-generator">生成</button>
+		<div class="input-group a-uuid-container animation-guide">
+		  	<span class="input-group-addon a-user-icon"><i class="glyphicon glyphicon-user"></i></span>
+		  	<img src="./images/logo.jpg" class="a-guide-logo">
+		  	<input type="text" class="form-control a-user-idbox">
+		  	<span class="input-group-addon a-button a-uuid-checker">使用</span>
+		  	<span class="input-group-addon a-button a-uuid-generator">生成</span>
 		</div>
 	</div>
 	
@@ -38,9 +39,8 @@
 			<span class="glyphicon glyphicon-bell a-notify" data-toggle="notify-popover"></span>
 		</div>
 	</div>
-	<div class="alert alert-success a-alert" role="alert">
-		<span class="a-alert-title">Oops</span>
-		<span class="a-alert-message">臭小子！！</span>
+	<div class="alert a-alert animation-toast" role="alert">
+		<span class="a-alert-message"></span>
 	</div>
 	<!-- template -->
 	<script id="tap-template" type="text/x-handlebars-template">
