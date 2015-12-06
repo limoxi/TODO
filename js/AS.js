@@ -339,8 +339,15 @@
             }
         },
         clear: function(refresh){
+            var uuid = AS.storage.get(AS.VALUE_TYPE['str'], 'uuid');
+            var version = AS.storage.get(AS.VALUE_TYPE['num'], 'version');
             storage.clear();
-            refresh && window.location.reload(true);
+            if(refresh){
+                window.location.reload(true);
+            }else{
+                AS.storage.set('uuid', uuid);
+                AS.storage.set('version', version);
+            }
         }
     };
     AS.storage = store;

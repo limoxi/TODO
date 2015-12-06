@@ -1,12 +1,11 @@
 /**
-*	封装localStorage
+*	任务面板
 *
 */
 
 ;(function (AS, undefined){
-	if(!AS || !AS.sync){
-		console.error('store.js依赖AS.js和sync.js');
-		return;
+	if(!AS){
+		console.error('store.js依赖AS.js');
 	}
 
 	AS.notify = AS.noop;
@@ -62,7 +61,6 @@
 			var finishedData = AS.store.get(AS.DONE_DATA);
 			for(var tid in todoData){
 				var data = todoData[tid];
-				console.log(data)
 				new Task(data);
 				AS.TID_ARRAY.push(tid);
 			}

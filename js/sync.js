@@ -2,13 +2,21 @@
 
 (function(AS){
 	var wilddogUrl = 'https://itodo.wilddogio.com',
-		dog = new Wilddog(wilddogUrl),
-		remoteVersionRef,
-		remoteDataRef;
-	var storeVersion = AS.storage.get(AS.VALUE_TYPE['num'], 'version', 1);
-	AS.storage.set('version', storeVersion);
+		dog;
+	try{
+		dog = new Wilddog(wilddogUrl);
+		AS.is_online = true;
+	}catch(e){
+		console.warn('目前属于离线状态');
+		return;
+	}
+	var remoteVersionRef,
+		remoteDataRef,
+		storeVersion;
+	
 	var syncManager = {
 		init: function(action, uuid, failCallback){
+			storeVersion = AS.storage.get(AS.VALUE_TYPE['num'], 'version', 1);
 			if(action){
 				dog.once('value', function(obj){
 					console.log(obj.child(uuid).exists());
