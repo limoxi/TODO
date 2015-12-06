@@ -10,6 +10,19 @@ $(function(){
 				AS.toast('还没有身份id可以点击“生成”', 'error', 5);
 				return;
 			}
+			//如果是离线状态
+			if(!AS.is_online){
+				if(generatorClicked){
+					generatorClicked = false;
+					AS.storage.set('uuid', inputUuid);
+					next();
+					$('.a-guide').hide();
+				}else{
+					AS.toast('离线状态不可用', 'warn');
+				}
+				return;
+			}
+			
 			if(checkGenedUuid(inputUuid)){
 				if(generatorClicked){
 					generatorClicked = false;
@@ -32,7 +45,7 @@ $(function(){
 		});
 		$('.a-guide').show();
 	}else{
-		AS.sync.init(false, uuid);
+		AS.is_online && AS.sync.init(false, uuid);
 		next();
 	}
 });
@@ -46,12 +59,15 @@ function init(){
 			$that.attr('disabled', false);
 		}, 1000);	
 	});
+	var storeVersion = AS.storage.get(AS.VALUE_TYPE['num'], 'version', 1);
+	AS.storage.set('version', storeVersion);
 }
 
 function next(){
 	AS.store.init($('.a-list'));
 	initTools();
 	bindListeners();
+	$('.a-tap-new').attr('placeholder', AS.storage.get(AS.VALUE_TYPE['str'], 'uuid') + $('.a-tap-new').attr('placeholder'));
 }
 
 /**
@@ -185,10 +201,20 @@ function initTools(){
 	});
 	//同步
 	$('.a-sync').on('click', function(){
-		console.log('同步中...');
-		AS.sync.sync();
+		if(AS.is_online){
+			AS.sync.sync();
+		}else{
+			AS.toast.info('离线状态，无法同步～');
+		}
 	});
-	
+	//清除数据
+	$('.a-clean').on('click', function(){
+		var action = window.confirm('危险操作！！确定要清空本地数据么？');
+		if(action){
+			var save = window.confirm('需要保留当前身份信息么？');
+			AS.storage.clear(!save);
+		}
+	}).tooltip();
 }
 
 //消息提示
@@ -215,6 +241,7 @@ function initToast(){
 			$alert.hide();
 		}, time*1000);
 	};
+	if(!AS.is_online) AS.toast('当前处于离线状态~', 'info');
 }
 
 // 将‘2015/11/22 下午9:57:30’ 转换成 ‘2015/11/22 21:57:30’，以便转换成Date实例
