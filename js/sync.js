@@ -1,20 +1,50 @@
 //与野狗云同步 https://itodo.wilddogio.com
 
 (function(AS){
-	var wilddogUrl = 'https://itodo.wilddogio.com';
-	var uuid = AS.storage.get(AS.VALUE_TYPE['str'], 'uuid', new Date().getTime().toString());
-	AS.storage.set('uuid', uuid);
-	var storeVersion = AS.storage.get(AS.VALUE_TYPE['num'], 'version', 1);
-	AS.storage.set('version', storeVersion);
-	var dog = new Wilddog(wilddogUrl);
-	var remoteVersionRef = dog.child(uuid + '/version');
-	var remoteDataRef = dog.child(uuid + '/data');
+	var wilddogUrl = 'https://itodo.wilddogio.com',
+		dog;
+	try{
+		dog = new Wilddog(wilddogUrl);
+		AS.is_online = true;
+	}catch(e){
+		console.warn('目前属于离线状态');
+		return;
+	}
+	var remoteVersionRef,
+		remoteDataRef,
+		storeVersion;
+	
 	var syncManager = {
-		sync: function(){
+		init: function(action, uuid, failCallback){
+			storeVersion = AS.storage.get(AS.VALUE_TYPE['num'], 'version', 1);
+			if(action){
+				dog.once('value', function(obj){
+					console.log(obj.child(uuid).exists());
+					if(obj.child(uuid).exists()){
+						AS.storage.set('uuid', uuid);
+						remoteVersionRef = dog.child(uuid + '/version');
+						remoteDataRef = dog.child(uuid + '/data');
+						remoteVersionRef.once('value', function(obj){
+							if(obj.val()){
+								syncManager.pull(obj.val());
+							}
+						});
+					}else{
+						failCallback();
+					}
+				});
+			}else{
+				remoteVersionRef = dog.child(uuid + '/version');
+				remoteDataRef = dog.child(uuid + '/data');
+			}
 			
+		},
+		sync: function(){
 			if('true' === AS.storage.get(AS.VALUE_TYPE['str'], 'storageChanged')){ //本地一旦改变，版本号自增
+				storeVersion = AS.storage.get(AS.VALUE_TYPE['num'], 'version');
 				AS.storage.set('version', ++storeVersion);
 			}
+			
 			remoteVersionRef.once('value', function(obj){
 				var version = obj.val();
 				version = version? parseInt(version): false;
@@ -35,6 +65,7 @@
 				'timer': AS.storage.get(AS.VALUE_TYPE['num'], 'timer', 30),
 			}
 			remoteDataRef.update(uploadData);
+			console.log(storeVersion);
 			remoteVersionRef.set(storeVersion);
 			console.log('同步完成，上传数据');
 		},

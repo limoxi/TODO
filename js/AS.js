@@ -1,14 +1,14 @@
  /**
  *@created date 2015-3-10
- *@updated date 2015-8-1
+ *@updated date 2015-12-3
  *@author Asia
  *@version 0.0.1 AS
  *目前只是将原生实现封装成更简便的使用方法，而没有和其他框架如jquery一样封装成自定义的对象
  * 实现效果：
  *          1、核心+功能组件架构方式
  *          2、模块化加载
- *          3、选择器
- *          4、ajax
+ *          3、选择器 =
+ *          4、ajax =
  *          5、上传
  *          6、dom操作
  *			7、事件
@@ -146,37 +146,6 @@
     //空函数
     AS.noop = function(){};
 
-    /**
-	* 模块化，不是AMD、CMD，仅仅AS使用😏
-	* 模块都绑定在AS对象上，也可以单独使用
-	* 使用方式:	1: var event = AS.require('event', true) 返回event对象，同时使得AS具备event功能
-	* 				(如果第二个参数为假，则只返回功能对象，并不绑定到AS上, 感觉就像在写Nodejs 😄)
-	*			2: 有待发掘...
-	*/
-	AS.require = function(arr, action){
-		if(AS.isString(arr)){
-			if(!AS[arr]){
-				action && (AS[arr] = AS.export[arr]);
-				delete AS.export[arr];
-			}
-			return AS[arr];
-		}else if(AS.isArray(arr)){
-			var returnResult = {};
-			arr.forEach(function(){
-				action && (AS[this] = AS.export[this]);
-				if(!returnResult[this]){
-					returnResult[this] = AS.export[this];
-					delete AS.export[this];
-				}
-			});
-			return returnResult;
-		}
-		console.error('不支持的参数类型, 返回AS对象');
-		return this;
-	};
-
-	AS.export = {};
-
     AS.ready = function(fn){
         if(isReady || document.readyState === 'complete'){
             readylist = null;
@@ -210,33 +179,6 @@
     };
 
     /**
-     * 绑定事件
-     * @param eventName
-     * @param fn
-     * @param context
-     * @param callContext
-     */
-    AS.on = function(eventName, fn, context, callContext){
-        context = context || window;
-        callContext = callContext || context;
-        context.addEventListener(eventName, function(e){
-            fn.call(callContext, e);
-        }, false);
-    };
-
-    /**
-     * 移除事件绑定
-     * @param eventName
-     * @param fn
-     * @param context
-     */
-    AS.off = function(eventName, fn, context){
-        context = context || window;
-        context.removeEventListener(eventName, fn, false);
-    };
-
-
-    /**
     *	回调函数
     */
     AS.Callbacks = function(){
@@ -263,7 +205,6 @@
     	return self;
     };
 
-    AS.globle = {};//承载全局变量
     AS.extend = extend;
 
 
@@ -385,6 +326,9 @@
                 case 'object':
                     storage.setItem(key, JSON.stringify(value));
                     break;
+                default:
+                    storage.setItem(key, value);
+                    break;
             }
         },
         save: function(data){
@@ -395,8 +339,15 @@
             }
         },
         clear: function(refresh){
+            var uuid = AS.storage.get(AS.VALUE_TYPE['str'], 'uuid');
+            var version = AS.storage.get(AS.VALUE_TYPE['num'], 'version');
             storage.clear();
-            refresh && window.location.reload(true);
+            if(refresh){
+                window.location.reload(true);
+            }else{
+                AS.storage.set('uuid', uuid);
+                AS.storage.set('version', version);
+            }
         }
     };
     AS.storage = store;

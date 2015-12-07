@@ -1,16 +1,11 @@
 /**
-*	封装localStorage
+*	任务面板
 *
 */
 
 ;(function (AS, undefined){
-	if(!AS || !AS.sync){
-		console.error('store.js依赖AS.js和sync.js');
-		return;
-	}
-	if(AS.storage.get(AS.VALUE_TYPE['str'], 'todoReady') !== 'true') {
-		AS.storage.clear();
-		AS.storage.set('todoReady', true);
+	if(!AS){
+		console.error('store.js依赖AS.js');
 	}
 
 	AS.notify = AS.noop;
@@ -30,7 +25,7 @@
 			AS.store.startTimer();
 		},
 		setColorfulStatus: function(min, color){
-			AS.settings.colorfulStatus[min] = color;
+			AS.settings.colorfulStatus[min+''] = color;
 			AS.storage.set('observer', AS.settings.colorfulStatus);
 		},
 		get: function(mode){
@@ -75,6 +70,7 @@
 			}
 			//初始化设置
 			AS.store.checkTaskStatus();
+			AS.store.startTimer();
 			var content = '未开启桌面通知功能';
 			if(window.Notification !== 'denied'){
 				window.Notification.requestPermission(function(permission){
@@ -130,7 +126,6 @@
 		},
 		startTimer: function(){
 			if(timer) AS.store.stopTimer();
-			console.log(parseInt(AS.settings.timerFrequency)*1000);
 			timer = window.setInterval(AS.store.checkTaskStatus, parseInt(AS.settings.timerFrequency)*1000);
 		},
 		stopTimer: function(){

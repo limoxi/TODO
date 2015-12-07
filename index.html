@@ -5,17 +5,22 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<link id="page_favicon" href="/favicon.ico" rel="icon" type="image/x-icon">
 	<link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="./css/bootstrap-theme.min.css">
-	<link rel="stylesheet" type="text/css" href="./css/bootstrap-switch.min.css">
 	<link rel="stylesheet" type="text/css" href="./css/base.css">
 	<link rel="stylesheet" type="text/css" href="./css/animate.css">
 	
 </head>
 <body>
-	<div class="input-group a-uuid-container">
-		<span class="input-group-addon" id="user_id"><i class="glyphicon glyphicon-user"></i></span>
-		<input type="text" class="form-control" aria-describedby="user_id" readonly >
+	<div class="container-fluid a-guide">
+		<div class="a-mask"></div>
+		<div class="input-group a-uuid-container animation-guide">
+		  	<span class="input-group-addon a-user-icon"><i class="glyphicon glyphicon-user"></i></span>
+		  	<img src="./images/logo.jpg" class="a-guide-logo">
+		  	<input type="text" class="form-control a-user-idbox">
+		  	<span class="input-group-addon a-button a-uuid-checker">使用</span>
+		  	<span class="input-group-addon a-button a-uuid-generator">生成</span>
+		</div>
 	</div>
+	
 	<div class="container-fluid a-container">
 		<div class="list-group a-list"></div>
 	</div>
@@ -27,6 +32,7 @@
 			<input type="text" data-target="" class="a-tap-new" placeholder="需要做些什么...(50字限制)" maxlength="100">
 		</label>
 		<div class="a-settings">
+			<span class="glyphicon glyphicon-floppy-remove a-clean" data-toggle="tooltip" title="危险操作！！清空本地数据"></span>
 			<span class="glyphicon glyphicon-refresh a-sync"></span>
 			<span class="glyphicon glyphicon-list a-doneList"></span>
 			<span class="glyphicon glyphicon-cog a-setting" data-toggle="setting-popover"></span>
@@ -34,9 +40,8 @@
 			<span class="glyphicon glyphicon-bell a-notify" data-toggle="notify-popover"></span>
 		</div>
 	</div>
-	<div class="alert alert-success a-alert" role="alert">
-		<span class="a-alert-title">Oops</span>
-		<span class="a-alert-message">臭小子！！</span>
+	<div class="alert a-alert animation-toast" role="alert">
+		<span class="a-alert-message"></span>
 	</div>
 	<!-- template -->
 	<script id="tap-template" type="text/x-handlebars-template">
@@ -63,7 +68,6 @@
 	
 	<script type="text/javascript" src="./js/jquery-2.1.4.js"></script>
 	<script type="text/javascript" src="./js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="./js/bootstrap-switch.min.js"></script>
 	<script type="text/javascript" src="./js/handlebars-v4.0.2.js"></script>
 	<script src="https://cdn.wilddog.com/js/client/current/wilddog.js"></script>
 	<script type="text/javascript" src="./js/AS.js"></script>
