@@ -352,3 +352,26 @@
     };
     AS.storage = store;
 })(AS, window.localStorage);
+
+//浏览器检测
+(function(AS, navigator){
+    var agent = navigator.userAgent;
+    var browser = {
+        is_mobile: function(){
+            return (/(iPhone|iPad|iPod|iOS|Android)/i.test(agent) || agent.indexOf('linux') > -1);
+        },
+        toString: function(){
+            return agent;
+        },
+        is_webkit: function(){
+            return agent.indexOf('AppleWebKit') > -1;
+        },
+        is_firefox: function(){
+            return (agent.indexOf('Gecko') > -1 && agent.indexOf('KHTML') == -1);
+        },
+        suported: function(){
+            return(!browser.is_mobile() && browser.is_webkit());
+        }
+    };
+    AS.browser = browser;
+})(AS, window.navigator);

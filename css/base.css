@@ -1,3 +1,6 @@
+.as-main, .a-init, .a-init-link{
+	display: none;
+}
 .a-mask{
 	position: absolute;
     height: 100%;
