@@ -1,3 +1,10 @@
+.a-main, .a-init, .a-init-link{
+	display: none;
+}
+.a-init{
+	padding: 30px;
+  	margin-top: 25%;
+}
 .a-mask{
 	position: absolute;
     height: 100%;

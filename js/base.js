@@ -51,6 +51,19 @@ $(function(){
 });
 
 function init(){
+	if(AS.browser.suported()){
+		$('.a-main').show();
+	}else{
+		if(AS.browser.is_mobile()){
+			$('.a-init-header').html('不支持移动端，请在PC上使用');
+			$('.a-init-desc').html('暂不支持在IOS、Android手机、平板等任何移动设备上使用，未来可能会考虑Android App，苹果的就算了，呵呵...');
+		}else{
+			$('.a-init-header').html('不支持该浏览器');
+			$('.a-init-desc').html('暂只支持webkit内核的浏览器，完全支持chrome，所以，建议使用最新版chrome进行浏览');
+			$('.a-init-link').show();
+		}
+		$('.a-init').show();
+	}
 	//所有按钮行为，在点击后禁用1秒，防止意外连续点击
 	$('.a-button').on('click', function(){
 		var $that = $(this);
