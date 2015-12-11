@@ -375,3 +375,29 @@
     };
     AS.browser = browser;
 })(AS, window.navigator);
+
+//桌面通知
+(function(AS){
+    if(window.Notification !== 'denied'){
+        window.Notification.requestPermission(function(permission){
+            if(permission === "granted") {
+                if(Notification.permission === 'granted'){
+                    AS.notifer = {};
+                    AS.notify = function(title, msg){
+                        if(!title || title.trim() == '') return;
+                        if(AS.notifer[title]){
+                            AS.notifer[title].close();
+                            AS.notifer[title] = void 0;
+                        }
+                        AS.notifer[title] = new Notification('来自TODO', {
+                            dir: 'ltr',
+                            body: msg || '帅锅喊你改bug啦～',
+                            icon: '/images/logo.jpg'
+                        });
+                    };
+                }
+            }
+        });
+    }
+    AS.storage.set('storageChanged', 'false');
+})(AS);

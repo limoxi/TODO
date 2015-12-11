@@ -71,38 +71,6 @@
 			//初始化设置
 			AS.store.checkTaskStatus();
 			AS.store.startTimer();
-			var content = '未开启桌面通知功能';
-			if(window.Notification !== 'denied'){
-				window.Notification.requestPermission(function(permission){
-		  			if(permission === "granted") {
-		        		$('.a-notify').addClass('action');
-						if(Notification.permission === 'granted'){
-							content = '已经开启桌面通知功能';
-							//桌面通知
-							AS.notifer = {};
-							AS.notify = function(title){
-								if(!title || title.trim() == '') return;
-								if(AS.notifer[title]){
-									AS.notifer[title].close();
-									AS.notifer[title] = void 0;
-								}
-								AS.notifer[title] = new Notification('来自TODO', {
-									dir: 'ltr',
-									body: '帅锅喊你改bug啦～',
-									icon: '/images/logo.jpg'
-								});
-							};
-						}
-						$('[data-toggle="notify-popover"]').popover({
-							html: true,
-							placement: 'top',
-							container: 'body',
-							content: content
-						});
-		      		}
-		    	});
-			}
-			AS.storage.set('storageChanged', 'false');
 		},
 		checkTaskStatus: function(){
 			var now = new Date();

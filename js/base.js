@@ -157,6 +157,18 @@ function bindListeners(){
 }
 
 function initTools(){
+	//通知图标
+	var content = '未开启桌面通知功能';
+	if(AS.notify){
+		$('.a-notify').addClass('action');
+		content = '已经开启桌面通知功能';
+	}
+	$('[data-toggle="notify-popover"]').popover({
+        html: true,
+        placement: 'top',
+        container: 'body',
+        content: content
+    });
 	
 	$('.a-doneList').on('click', function(){
 		$('.a-slider-container').toggle('fast');
