@@ -19,7 +19,6 @@
 			storeVersion = AS.storage.get(AS.VALUE_TYPE['num'], 'version', 1);
 			if(action){
 				dog.once('value', function(obj){
-					console.log(obj.child(uuid).exists());
 					if(obj.child(uuid).exists()){
 						AS.storage.set('uuid', uuid);
 						remoteVersionRef = dog.child(uuid + '/version');
@@ -48,11 +47,12 @@
 			remoteVersionRef.once('value', function(obj){
 				var version = obj.val();
 				version = version? parseInt(version): false;
-				console.log('version ===>>', version);
 				if(storeVersion > version || !version){
 					syncManager.push(storeVersion);
 				}else if(storeVersion < version){
 					syncManager.pull(version);
+				}else{
+					AS.toast('无需同步，数据一致');
 				}
 			});
 			AS.storage.set('storageChanged', 'false');
@@ -65,9 +65,8 @@
 				'timer': AS.storage.get(AS.VALUE_TYPE['num'], 'timer', 30),
 			}
 			remoteDataRef.update(uploadData);
-			console.log(storeVersion);
 			remoteVersionRef.set(storeVersion);
-			console.log('同步完成，上传数据');
+			AS.toast('同步完成，上传数据', 'success');
 		},
 		pull: function(version){
 			remoteDataRef.once('value', function(obj){
@@ -75,7 +74,7 @@
 				AS.storage.save(downData);
 				storeVersion = version;
 				AS.storage.set('version', version);
-				console.log('同步完成，下载数据', downData);
+				AS.toast('同步完成，下载数据', 'success');
 				window.location.reload(true);
 			});
 		}

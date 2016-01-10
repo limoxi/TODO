@@ -3,6 +3,7 @@
 <head>
 	<title>T O D O !</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link id="page_favicon" href="/favicon.ico" rel="icon" type="image/x-icon">
 	<link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="./css/base.css">
@@ -10,6 +11,12 @@
 	
 </head>
 <body>
+<div class="jumbotron a-init">
+  <h1 class="a-init-header"></h1>
+  <p class="a-init-desc"></p>
+  <p class="a-init-link"><a class="btn btn-primary btn-lg" href="http://www.google.cn/intl/zh-CN/chrome/browser/desktop/index.html" role="button">下载谷歌浏览器</a></p>
+</div>
+<div class="a-main">
 	<div class="container-fluid a-guide">
 		<div class="a-mask"></div>
 		<div class="input-group a-uuid-container animation-guide">
@@ -31,6 +38,10 @@
 		<label>
 			<input type="text" data-target="" class="a-tap-new" placeholder="需要做些什么...(50字限制)" maxlength="100">
 		</label>
+		<div class="a-userinfo">
+			<span class="glyphicon glyphicon-user"></span>
+			<span class="a-userid" data-toggle="tooltip" title="记住你的id"></span>
+		</div>
 		<div class="a-settings">
 			<span class="glyphicon glyphicon-floppy-remove a-clean" data-toggle="tooltip" title="危险操作！！清空本地数据"></span>
 			<span class="glyphicon glyphicon-refresh a-sync"></span>
@@ -43,6 +54,7 @@
 	<div class="alert a-alert animation-toast" role="alert">
 		<span class="a-alert-message"></span>
 	</div>
+</div>
 	<!-- template -->
 	<script id="tap-template" type="text/x-handlebars-template">
 		<a class="list-group-item a-tap {{#if flash}}animation-flash{{/if}}" data-key="{{ tid }}">
@@ -51,6 +63,7 @@
 				<span class="a-tap-done glyphicon glyphicon-ok" data-toggle="tooltip" title="完成"></span>
 				<span class="a-tap-edit glyphicon glyphicon-wrench" data-toggle="tooltip" title="编辑"></span>
 				<span class="a-tap-flash glyphicon glyphicon-flash {{#if flash}}action{{/if}}" data-toggle="tooltip" title="关注"></span>
+				<span class="a-tap-routine glyphicon glyphicon-certificate {{#if routine}}action{{/if}}" data-toggle="tooltip" title="日常"></span>
 			</p>
 			<p class="a-tap-time">{{ created_at }}</p>
 			<h4 class="a-tap-title">{{ title }}</h4>
@@ -74,7 +87,7 @@
 	<script type="text/javascript" src="./js/sync.js"></script>
 	<script type="text/javascript" src="./js/store.js"></script>
 	<script type="text/javascript" src="./js/task.js"></script>
-	<script type="text/javascript" src="./js/base.js"></script>
+	<script type="text/javascript" src="./js/base.js" charset="UTF-8"></script>
 	
 	
 </body>

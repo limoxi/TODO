@@ -51,6 +51,19 @@ $(function(){
 });
 
 function init(){
+	if(AS.browser.suported()){
+		$('.a-main').show();
+	}else{
+		if(AS.browser.is_mobile()){
+			$('.a-init-header').html('不支持移动端，请在PC上使用');
+			$('.a-init-desc').html('暂不支持在IOS、Android手机、平板等任何移动设备上使用，未来可能会考虑Android App，苹果的就算了，呵呵...');
+		}else{
+			$('.a-init-header').html('不支持该浏览器');
+			$('.a-init-desc').html('暂只支持webkit内核的浏览器，完全支持chrome，所以，建议使用最新版chrome进行浏览');
+			$('.a-init-link').show();
+		}
+		$('.a-init').show();
+	}
 	//所有按钮行为，在点击后禁用1秒，防止意外连续点击
 	$('.a-button').on('click', function(){
 		var $that = $(this);
@@ -67,7 +80,7 @@ function next(){
 	AS.store.init($('.a-list'));
 	initTools();
 	bindListeners();
-	$('.a-tap-new').attr('placeholder', AS.storage.get(AS.VALUE_TYPE['str'], 'uuid') + $('.a-tap-new').attr('placeholder'));
+	$('.a-userinfo .a-userid').html(AS.storage.get(AS.VALUE_TYPE['str'], 'uuid'));
 }
 
 /**
@@ -139,11 +152,27 @@ function bindListeners(){
 			//关注
 			task.setFlash(!$(this).hasClass('action'));
 			$(this).toggleClass('action').parent().parent().toggleClass('animation-flash');
+		}else if($(this).hasClass('a-tap-routine')){
+			//日常
+			task.setRoutine(!$(this).hasClass('action'));
+			$(this).toggleClass('action');
 		}
 	});
 }
 
 function initTools(){
+	//通知图标
+	var content = '未开启桌面通知功能';
+	if(AS.notify){
+		$('.a-notify').addClass('action');
+		content = '已经开启桌面通知功能';
+	}
+	$('[data-toggle="notify-popover"]').popover({
+        html: true,
+        placement: 'top',
+        container: 'body',
+        content: content
+    });
 	
 	$('.a-doneList').on('click', function(){
 		$('.a-slider-container').toggle('fast');
@@ -240,6 +269,8 @@ function initToast(){
 		toastTimer = window.setTimeout(function(){
 			$alert.hide();
 		}, time*1000);
+		//TODO 纪录日志
+
 	};
 	if(!AS.is_online) AS.toast('当前处于离线状态~', 'info');
 }
@@ -258,7 +289,6 @@ function dateTransfer(dateStr){
 
 //将得到的background-color由rgb格式(rgb(255, 255, 255))转换为hex格式(#ffffff)
 function rgbToHex(bgColor){
-	console.log('bgColor=======>>>', bgColor);
 	bgColor = bgColor.substring(4, bgColor.length-1).split(',');
 	var r = parseInt(bgColor[0]),
 		g = parseInt(bgColor[1]),

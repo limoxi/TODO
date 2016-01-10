@@ -9,12 +9,14 @@ function Task(options){
 		'tid': d.getTime(),
 		'content': '没有任务描述',
 		'flash': false,
+		'routine': false,
 		'is_finished': false,
 		'created_at': d.toLocaleString()
 	}, options);
 	/* 属性 */
 	this.tid = options.tid; //任务id
 	this.flash = options.flash; //是否已关注
+	this.routine = options.routine; //是否日常任务
 	this.is_finished = options.is_finished; //是否已完成
 	this.created_at = options.created_at; //任务创建时间
 	this.title = options.title || ('TODO_TASK_'+this.tid); //任务标题
@@ -34,7 +36,7 @@ function Task(options){
 		var change = changes[0],
 			changeType = change.type;
 			changeAttr = change.name;
-		console.log('taskChange >>> changeType='+changeType+' '+changeAttr+'='+changes[0].object[changeAttr]);
+		AS.toast('taskChange >>> changeType='+changeType+' '+changeAttr+'='+changes[0].object[changeAttr], 'success');
 		if('update' === changeType && !that.is_finished){
 			that._store(false);
 		}else{
@@ -72,6 +74,10 @@ Task.prototype = {
 		this.flash = !!bool;
 		return this;
 	},
+	setRoutine: function(bool){
+		this.routine = !!bool;
+		return this;
+	},
 	finish: function(){
 		this.is_finished = true;
 		return this;
@@ -98,6 +104,7 @@ Task.prototype = {
 		return {
 			"tid": this.tid,
 			"flash": this.flash,
+			"routine": this.routine,
 			"is_finished": this.is_finished,
 			"created_at": this.created_at,
 			"title": this.title,
