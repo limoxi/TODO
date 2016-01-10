@@ -80,7 +80,7 @@ function next(){
 	AS.store.init($('.a-list'));
 	initTools();
 	bindListeners();
-	$('.a-tap-new').attr('placeholder', AS.storage.get(AS.VALUE_TYPE['str'], 'uuid') + $('.a-tap-new').attr('placeholder'));
+	$('.a-userinfo .a-userid').html(AS.storage.get(AS.VALUE_TYPE['str'], 'uuid'));
 }
 
 /**
@@ -152,6 +152,10 @@ function bindListeners(){
 			//关注
 			task.setFlash(!$(this).hasClass('action'));
 			$(this).toggleClass('action').parent().parent().toggleClass('animation-flash');
+		}else if($(this).hasClass('a-tap-routine')){
+			//日常
+			task.setRoutine(!$(this).hasClass('action'));
+			$(this).toggleClass('action');
 		}
 	});
 }
@@ -265,6 +269,8 @@ function initToast(){
 		toastTimer = window.setTimeout(function(){
 			$alert.hide();
 		}, time*1000);
+		//TODO 纪录日志
+
 	};
 	if(!AS.is_online) AS.toast('当前处于离线状态~', 'info');
 }
@@ -283,7 +289,6 @@ function dateTransfer(dateStr){
 
 //将得到的background-color由rgb格式(rgb(255, 255, 255))转换为hex格式(#ffffff)
 function rgbToHex(bgColor){
-	console.log('bgColor=======>>>', bgColor);
 	bgColor = bgColor.substring(4, bgColor.length-1).split(',');
 	var r = parseInt(bgColor[0]),
 		g = parseInt(bgColor[1]),

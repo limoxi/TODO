@@ -75,10 +75,13 @@
 		checkTaskStatus: function(){
 			var now = new Date();
 			var needNotify = false;
+			var curr_task;
 			for(var i in AS.TID_ARRAY){
 				var key = parseInt(AS.TID_ARRAY[i]);
 				var dif = (now - key)/1000/60;
 				var tempColor = 'whitesmoke';
+				curr_task = AS.TID2TASK[key];
+				if(!curr_task || curr_task.routine) continue; //如果是日常任务，则无需提醒
 				for(var min in AS.settings.colorfulStatus){
 					var col = AS.settings.colorfulStatus[min];
 					var bgColor = AS.store.$container.find('a[data-key="'+key+'"]').css('background-color');
