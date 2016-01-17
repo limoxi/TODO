@@ -2,7 +2,7 @@ var generatorClicked = false;
 $(function(){
 	init();
 	initToast();
-	var uuid = AS.storage.get(AS.VALUE_TYPE['str'], 'uuid');
+	var uuid = AS.storage.get('uuid', AS.VALUE_TYPE['str']);
 	if(!uuid){
 		$('.a-uuid-checker').on('click', function(){
 			var inputUuid = $('.a-uuid-container').find('input').val();
@@ -72,7 +72,7 @@ function init(){
 			$that.attr('disabled', false);
 		}, 1000);	
 	});
-	var storeVersion = AS.storage.get(AS.VALUE_TYPE['num'], 'version', 1);
+	var storeVersion = AS.storage.get('version', AS.VALUE_TYPE['num'], 1);
 	AS.storage.set('version', storeVersion);
 }
 
@@ -80,7 +80,7 @@ function next(){
 	AS.store.init($('.a-list'));
 	initTools();
 	bindListeners();
-	$('.a-userinfo .a-userid').html(AS.storage.get(AS.VALUE_TYPE['str'], 'uuid'));
+	$('.a-userinfo .a-userid').html(AS.storage.get('uuid', AS.VALUE_TYPE['str']));
 }
 
 /**
@@ -170,7 +170,7 @@ function initTools(){
 	var $tooltip = $('.a-notify'), notifyTimer;
 	var updateNotifyStatus = function(){
 		var content = '已开启桌面通知',
-			status = AS.storage.get(AS.VALUE_TYPE['str'], 'notify', 'on');
+			status = AS.storage.get('notify', AS.VALUE_TYPE['str'], 'on');
 		if(AS.notifyToolTip){
 			AS.notifyToolTip.tooltip('destroy');
 			AS.notifyToolTip = null;

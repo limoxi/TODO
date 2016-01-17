@@ -14,8 +14,8 @@
 	AS.TID2TASK = {};
 	AS.TID_ARRAY = [];
 	AS.settings = {
-		timerFrequency: AS.storage.get(AS.VALUE_TYPE['num'], 'timer', 20),
-		colorfulStatus: AS.storage.get(AS.VALUE_TYPE['obj'], 'observer', {})
+		timerFrequency: AS.storage.get('timer', AS.VALUE_TYPE['num'], 20),
+		colorfulStatus: AS.storage.get('observer', AS.VALUE_TYPE['obj'], {})
 	};
 	var timer;
 	AS.store = {
@@ -29,7 +29,7 @@
 			AS.storage.set('observer', AS.settings.colorfulStatus);
 		},
 		get: function(mode){
-			return AS.storage.get(AS.VALUE_TYPE['obj'], mode, {});
+			return AS.storage.get(mode, AS.VALUE_TYPE['obj'], {});
 		},
 		add: function(options){
 			var newTask = new Task(options);
