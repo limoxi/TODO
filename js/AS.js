@@ -286,7 +286,8 @@
     AS.VALUE_TYPE = {
         'str': 0,
         'num': 1,
-        'obj': 2
+        'obj': 2,
+        'bool': 3
     };
     var transformGet = function(type, key, defaultValue){
         var value = storage.getItem(key);
@@ -302,14 +303,13 @@
             case 2:
                 returnValue = JSON.parse(value);
                 break;
-            default:
-                returnValue = value;
-                break;
+            case 3:
+                returnValue = !!value;
         }
         return returnValue;
     };
     var store = {
-        get: function(type, key, defaultValue){
+        get: function(key, type, defaultValue){
             if(!key) return;
             type = type || AS.VALUE_TYPE['str'];
             return transformGet(type, key, defaultValue);
@@ -326,9 +326,19 @@
                 case 'object':
                     storage.setItem(key, JSON.stringify(value));
                     break;
-                default:
-                    storage.setItem(key, value);
+                case 'boolean':
+                    storage.setItem(key, value ? 1: 0);
                     break;
+                case 'function':
+                    value = value();
+                    if(value == undefined || value == null){
+                        console.log('不合法的值(localstorage): ', value);
+                    }else{
+                        storage.setItem(key, value());
+                    }
+                    break;
+                default:
+                    console.log('不合法的值(localstorage): ', value);
             }
         },
         save: function(data){
@@ -339,14 +349,14 @@
             }
         },
         clear: function(refresh){
-            var uuid = AS.storage.get(AS.VALUE_TYPE['str'], 'uuid');
-            var version = AS.storage.get(AS.VALUE_TYPE['num'], 'version');
+            var uuid = store.get('uuid', AS.VALUE_TYPE['str']);
+            var version = store.get('version', AS.VALUE_TYPE['num']);
             storage.clear();
             if(refresh){
                 window.location.reload(true);
             }else{
-                AS.storage.set('uuid', uuid);
-                AS.storage.set('version', version);
+                store.set('uuid', uuid);
+                store.set('version', version);
             }
         }
     };
@@ -384,6 +394,7 @@
                 if(Notification.permission === 'granted'){
                     AS.notifer = {};
                     AS.notify = function(title, msg){
+                        if('on' !== AS.storage.get('notify', AS.VALUE_TYPE['str'], 'on')) return;
                         if(!title || title.trim() == '') return;
                         if(AS.notifer[title]){
                             AS.notifer[title].close();

@@ -36,7 +36,7 @@ function Task(options){
 		var change = changes[0],
 			changeType = change.type;
 			changeAttr = change.name;
-		AS.toast('taskChange >>> changeType='+changeType+' '+changeAttr+'='+changes[0].object[changeAttr], 'success');
+		AS.toast('操作成功～', 'success');
 		if('update' === changeType && !that.is_finished){
 			that._store(false);
 		}else{

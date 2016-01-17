@@ -110,14 +110,11 @@
 	word-break: break-all;
 }
 .a-tap-new{
-	position: fixed;
-    bottom: 0;
-    padding: 10px 25px;
+    padding: 5px 17px;
     font-size: 24px;
     margin: 0;
     border: none;
     border-bottom: 2px solid #0099FF;
-    margin-bottom: 10px;
     width: 100%;
 }
 .a-tap-new:focus{
@@ -144,29 +141,29 @@
 .a-finished-list{
 	
 }
+.a-footer{
+	position: fixed;
+	bottom: 0;
+	background: white;
+	width: 100%;
+	padding: 10px;
+}
 .a-settings{
-    display: inline-block;
-    position: fixed;
-    bottom: 65px;
-    right: 0;
-    width: 230px;
+    float: right;
 }
 .a-userinfo{
 	display: inline-block;
-    position: fixed;
-    bottom: 65px;
-    left: 0;
     font-size: 20px;
-    left: 15px;
+    margin-left: 20px;
     color: #A9A1A1;
 }
 .a-settings span{
 	font-size: 20px;
     display: block;
     float: left;
-    margin: 8px;
+    margin: 0 8px;
 }
-.a-doneList:hover, .a-setting:hover, .a-observer:hover, .a-notify:hover, .a-sync:hover, .a-clean:hover{
+.a-doneList:hover, .a-setting:hover, .a-observer:hover, .a-sync:hover, .a-clean:hover{
 	color: #CC0033;
 }
 .a-alert{

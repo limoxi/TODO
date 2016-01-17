@@ -8,7 +8,6 @@
 	<link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="./css/base.css">
 	<link rel="stylesheet" type="text/css" href="./css/animate.css">
-	
 </head>
 <body>
 <div class="jumbotron a-init">
@@ -34,22 +33,22 @@
 	<div class="container a-slider-container">
 		<div class="list-group a-finished-list"></div>
 	</div>
-	<div class="footer container-fluid">
-		<label>
-			<input type="text" data-target="" class="a-tap-new" placeholder="需要做些什么...(50字限制)" maxlength="100">
-		</label>
+	<div class="a-footer container-fluid">
+		
 		<div class="a-userinfo">
 			<span class="glyphicon glyphicon-user"></span>
 			<span class="a-userid" data-toggle="tooltip" title="记住你的id"></span>
 		</div>
 		<div class="a-settings">
 			<span class="glyphicon glyphicon-floppy-remove a-clean" data-toggle="tooltip" title="危险操作！！清空本地数据"></span>
-			<span class="glyphicon glyphicon-refresh a-sync"></span>
-			<span class="glyphicon glyphicon-list a-doneList"></span>
-			<span class="glyphicon glyphicon-cog a-setting" data-toggle="setting-popover"></span>
-			<span class="glyphicon glyphicon-time a-observer" data-toggle="observer-popover"></span>
-			<span class="glyphicon glyphicon-bell a-notify" data-toggle="notify-popover"></span>
+			<span class="glyphicon glyphicon-refresh a-sync" title="云同步"></span>
+			<span class="glyphicon glyphicon-list a-doneList" title="查看已完成的任务"></span>
+			<span title="提醒频率设置"><em class="glyphicon glyphicon-cog a-setting" data-toggle="setting-popover"></em></span>
+			<span title="提醒设置"><em class="glyphicon glyphicon-time a-observer" data-toggle="observer-popover"></em></span>
+			<span class="glyphicon glyphicon-bell a-notify" data-toggle="notify-tooltip"></span>
 		</div>
+
+		<input type="text" data-target="" class="a-tap-new" placeholder="需要做些什么...(50字限制)" maxlength="100">
 	</div>
 	<div class="alert a-alert animation-toast" role="alert">
 		<span class="a-alert-message"></span>
@@ -79,11 +78,21 @@
 		</a>
 	</script>
 	
+	<script type="text/javascript">
+		var _hmt = _hmt || [];
+		(function() {
+			var hm = document.createElement("script");
+			hm.src = "//hm.baidu.com/hm.js?3e60ea85d15807408c5fc744f17ed43f";
+			var s = document.getElementsByTagName("script")[0]; 
+			s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
 	<script type="text/javascript" src="./js/jquery-2.1.4.js"></script>
 	<script type="text/javascript" src="./js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="./js/handlebars-v4.0.2.js"></script>
 	<script src="https://cdn.wilddog.com/js/client/current/wilddog.js"></script>
 	<script type="text/javascript" src="./js/AS.js"></script>
+	<script type="text/javascript" src="./js/EasyDB.js"></script>
 	<script type="text/javascript" src="./js/sync.js"></script>
 	<script type="text/javascript" src="./js/store.js"></script>
 	<script type="text/javascript" src="./js/task.js"></script>

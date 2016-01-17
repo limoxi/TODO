@@ -16,7 +16,7 @@
 	
 	var syncManager = {
 		init: function(action, uuid, failCallback){
-			storeVersion = AS.storage.get(AS.VALUE_TYPE['num'], 'version', 1);
+			storeVersion = AS.storage.get('version', AS.VALUE_TYPE['num'], 1);
 			if(action){
 				dog.once('value', function(obj){
 					if(obj.child(uuid).exists()){
@@ -39,8 +39,8 @@
 			
 		},
 		sync: function(){
-			if('true' === AS.storage.get(AS.VALUE_TYPE['str'], 'storageChanged')){ //本地一旦改变，版本号自增
-				storeVersion = AS.storage.get(AS.VALUE_TYPE['num'], 'version');
+			if('true' === AS.storage.get('storageChanged', AS.VALUE_TYPE['str'])){ //本地一旦改变，版本号自增
+				storeVersion = AS.storage.get('version', AS.VALUE_TYPE['num']);
 				AS.storage.set('version', ++storeVersion);
 			}
 			
@@ -59,10 +59,10 @@
 		},
 		push: function(storeVersion){
 			var uploadData = {
-				'todoData': AS.storage.get(AS.VALUE_TYPE['obj'], 'todoData', {}),
-				'finishedData': AS.storage.get(AS.VALUE_TYPE['obj'], 'finishedData', {}),
-				'observer': AS.storage.get(AS.VALUE_TYPE['obj'], 'observer', {}),
-				'timer': AS.storage.get(AS.VALUE_TYPE['num'], 'timer', 30),
+				'todoData': AS.storage.get('todoData', AS.VALUE_TYPE['obj'], {}),
+				'finishedData': AS.storage.get('finishedData', AS.VALUE_TYPE['obj'], {}),
+				'observer': AS.storage.get('observer', AS.VALUE_TYPE['obj'], {}),
+				'timer': AS.storage.get('timer', AS.VALUE_TYPE['num'], 30),
 			}
 			remoteDataRef.update(uploadData);
 			remoteVersionRef.set(storeVersion);
