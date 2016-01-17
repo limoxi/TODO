@@ -384,6 +384,7 @@
                 if(Notification.permission === 'granted'){
                     AS.notifer = {};
                     AS.notify = function(title, msg){
+                        if('on' !== AS.storage.get(AS.VALUE_TYPE['str'], 'notify', 'on')) return;
                         if(!title || title.trim() == '') return;
                         if(AS.notifer[title]){
                             AS.notifer[title].close();

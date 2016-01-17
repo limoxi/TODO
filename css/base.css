@@ -163,7 +163,7 @@
     float: left;
     margin: 0 8px;
 }
-.a-doneList:hover, .a-setting:hover, .a-observer:hover, .a-notify:hover, .a-sync:hover, .a-clean:hover{
+.a-doneList:hover, .a-setting:hover, .a-observer:hover, .a-sync:hover, .a-clean:hover{
 	color: #CC0033;
 }
 .a-alert{

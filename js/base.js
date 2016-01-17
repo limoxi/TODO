@@ -158,27 +158,59 @@ function bindListeners(){
 			$(this).toggleClass('action');
 		}
 	});
+
+	//关闭页面时给出同步提示
+	$(window).on('beforeunload', function(){
+		return '～请确保数据已同步到云～';
+	});
 }
 
 function initTools(){
 	//通知图标
-	var content = '未开启桌面通知功能';
-	if(AS.notify){
-		$('.a-notify').addClass('action');
-		content = '已经开启桌面通知功能';
-	}
-	$('[data-toggle="notify-popover"]').popover({
-        html: true,
-        placement: 'top',
-        container: 'body',
-        content: content
-    });
+	var $tooltip = $('.a-notify'), notifyTimer;
+	var updateNotifyStatus = function(){
+		var content = '已开启桌面通知',
+			status = AS.storage.get(AS.VALUE_TYPE['str'], 'notify', 'on');
+		if(AS.notifyToolTip){
+			AS.notifyToolTip.tooltip('destroy');
+			AS.notifyToolTip = null;
+			if('on' === status){
+	    		$('.a-notify').removeClass('action');
+				content = '已关闭桌面通知';
+				status = 'off';
+	    	}else{
+	    		$('.a-notify').addClass('action');
+	    		status = 'on';
+	    	}
+	    	AS.storage.set('notify', status);
+		}else{
+			if('on' === status){
+	    		$('.a-notify').addClass('action');
+	    	}else{
+	    		$('.a-notify').removeClass('action');
+	    		content = '已关闭桌面通知';
+	    	}
+		}
+		//由于destroy方法耗时较长，可能初始化动作已完成destroy还没执行，此时就会将新的tooltip给destroy掉
+		//所以这里初始化动作延时400ms执行，确保之前的destroy动作已完成
+		notifyTimer && window.clearTimeout(notifyTimer);
+		notifyTimer = window.setTimeout(function(){
+			AS.notifyToolTip = $tooltip.tooltip({
+		        placement: 'top',
+		        title: content
+		    });
+		    AS.notifyToolTip.tooltip('show');
+		}, 400);
+    	
+	};
+	$('.a-notify').on('click', updateNotifyStatus);
+	updateNotifyStatus();
 	
-	$('.a-doneList').on('click', function(){
+	$('.a-doneList').tooltip().on('click', function(){
 		$('.a-slider-container').toggle('fast');
 	});
 	//设置
-	$('[data-toggle="setting-popover"]').popover({
+	$('.a-setting').popover({
 		html: true,
 		placement: 'top',
 		container: 'body',
@@ -194,9 +226,9 @@ function initTools(){
 			timer = parseInt(timer)*60;
 			AS.store.setTimerFrequency(timer);
 		});
-	});
+	}).parent().tooltip();
 	//时间
-	$('[data-toggle="observer-popover"]').popover({
+	$('.a-observer').popover({
 		html: true,
 		placement: 'top',
 		container: 'body',
@@ -227,9 +259,9 @@ function initTools(){
 			$(this).css('border', '3px dashed black').siblings().css('border', 'none');
 			$('.a-observer-color').val(color);
 		});
-	});
+	}).parent().tooltip();
 	//同步
-	$('.a-sync').on('click', function(){
+	$('.a-sync').tooltip().on('click', function(){
 		if(AS.is_online){
 			AS.sync.sync();
 		}else{
