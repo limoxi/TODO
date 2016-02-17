@@ -49,6 +49,7 @@ function Task(options){
 
 Task.prototype = {
 	render: function(newData){
+		this.getPassedTimeStr(); //更新经历的时间
 		var $tmpl_html, $container;
 		if(this.is_finished){
 			$tmpl_html = $('#finished-tap-template');
@@ -68,6 +69,7 @@ Task.prototype = {
 		}
 		$('[data-toggle="tooltip"]').tooltip();
 		AS.storage.set('storageChanged', 'true'); //标志本地数据已经改变
+		
 		return this;
 	},
 	setFlash: function(bool){
@@ -77,6 +79,28 @@ Task.prototype = {
 	setRoutine: function(bool){
 		this.routine = !!bool;
 		return this;
+	},
+	getPassedTimeStr: function(){
+		var d = new Date(dateTransfer(this.created_at));
+		var now = new Date();
+		var diff = now - d;
+		var s = diff / 1000;
+		if(s < 60){
+			this.passed = '';
+			return this.passed;
+		}
+		var m = diff / 1000 / 60;
+		if(m < 60){
+			this.passed = Math.round(m) + '分';
+			return this.passed;
+		}
+		var h = diff / 1000 / 60 / 60;
+		if(h < 24){
+			this.passed = Math.round(h) + '时';
+			return this.passed;
+		}
+		this.passed = Math.round(diff / 1000 / 60 / 60 / 24) + '天';
+		return this.passed;
 	},
 	finish: function(){
 		this.is_finished = true;
@@ -104,6 +128,7 @@ Task.prototype = {
 		return {
 			"tid": this.tid,
 			"flash": this.flash,
+			"passed": this.passed,
 			"routine": this.routine,
 			"is_finished": this.is_finished,
 			"created_at": this.created_at,
