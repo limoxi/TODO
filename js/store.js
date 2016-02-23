@@ -86,7 +86,7 @@
 					var col = AS.settings.colorfulStatus[min];
 					var bgColor = AS.store.$container.find('a[data-key="'+key+'"]').css('background-color');
 					var hex = rgbToHex(bgColor);
-					if(dif >= min && hex!=col){
+					if(hex && dif >= min && hex!=col){
 						needNotify = true;
 						tempColor = col;
 					}

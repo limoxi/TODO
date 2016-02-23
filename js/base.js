@@ -321,6 +321,7 @@ function dateTransfer(dateStr){
 
 //将得到的background-color由rgb格式(rgb(255, 255, 255))转换为hex格式(#ffffff)
 function rgbToHex(bgColor){
+	if(!bgColor) return;
 	bgColor = bgColor.substring(4, bgColor.length-1).split(',');
 	var r = parseInt(bgColor[0]),
 		g = parseInt(bgColor[1]),
