@@ -19,7 +19,7 @@ body{
     width: 100%;
     z-index: 1;
     background: rgba(0,0,0,0.5);
-    margin: 0 -10px;
+    margin: 0 -15px;
 }
 .a-uuid-container{
 	width: 400px;
