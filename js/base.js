@@ -1,4 +1,14 @@
 var generatorClicked = false;
+//处理背景图适配
+setBackground();
+window.onresize = setBackground;
+function setBackground(){
+	var h = $(window).height();
+	console.log('重置背景高度======', h);
+	$('body').css({
+		'background-size': '50px ' + h + 'px'
+	});
+}
 $(function(){
 	init();
 	initToast();
