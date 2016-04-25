@@ -28,17 +28,31 @@
 			AS.settings.colorfulStatus[min+''] = color;
 			AS.storage.set('observer', AS.settings.colorfulStatus);
 		},
-		get: function(mode){
-			return AS.storage.get(mode, AS.VALUE_TYPE['obj'], {});
+		get: function(mode, callback){
+			if(mode == AS.DONE_DATA){
+				//完成的任务从indexeddb中获取
+				AS.finishedDB.get(callback);
+			}else{
+				return AS.storage.get(mode, AS.VALUE_TYPE['obj'], {});
+			}
 		},
 		add: function(options){
 			var newTask = new Task(options);
 			AS.TID_ARRAY.push(newTask.tid);
 		},
 		set: function(mode, tid, data){
+			if(mode == AS.DONE_DATA){
+				//完成的任务保存在indexeddb中
+				AS.finishedDB.get(tid, function(){
+					AS.finishedDB.set(data);
+				});
+				return;
+			}
 			var modeData = AS.store.get(mode);
 			modeData[tid] = data;
 			AS.storage.set(mode, modeData);
+			console.log(data);
+			
 		},
 		remove: function(mode, tid){
 			var todoData = AS.store.get(AS.TODO_DATA);
@@ -64,9 +78,10 @@
 				new Task(data);
 				AS.TID_ARRAY.push(tid);
 			}
-			for (var tid in finishedData){
-				var data = finishedData[tid];
+			for(var tid in AS.finishedData){
+				var data = AS.finishedData[tid];
 				new Task(data);
+				AS.TID_ARRAY.push(tid);
 			}
 			//初始化设置
 			AS.store.checkTaskStatus();

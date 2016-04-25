@@ -87,10 +87,19 @@ function init(){
 }
 
 function next(){
-	AS.store.init($('.a-list'));
-	initTools();
-	bindListeners();
-	$('.a-userinfo .a-userid').html(AS.storage.get('uuid', AS.VALUE_TYPE['str']));
+	//连接indexeddb数据库
+	AS.getDB('todo').use('finishedData', {keyPath: 'tid', success: function(){
+		console.log('连接indexedDB成功');
+		this.get(function(data){
+			console.log('=========', data);
+			AS.finishedDB = this;
+			AS.finishedData = data;
+			AS.store.init($('.a-list'));
+			initTools();
+			bindListeners();
+			$('.a-userinfo .a-userid').html(AS.storage.get('uuid', AS.VALUE_TYPE['str']));
+		});
+	}});
 }
 
 /**

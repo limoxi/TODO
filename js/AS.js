@@ -1,10 +1,10 @@
  /**
  *@created date 2015-3-10
- *@updated date 2015-12-3
+ *@updated date 2016-4-10
  *@author Asia
- *@version 0.0.1 AS
+ *@version 0.1.0 AS
  *目前只是将原生实现封装成更简便的使用方法，而没有和其他框架如jquery一样封装成自定义的对象
- * 实现效果：
+ * 实现功能：
  *          1、核心+功能组件架构方式
  *          2、模块化加载
  *          3、选择器 =
@@ -12,6 +12,8 @@
  *          5、上传
  *          6、dom操作
  *			7、事件
+ *          8、桌面通知 =
+ *          9、本地存储(localstorage、indexedDB) =
  */
 
 (function(window,undefined){
@@ -412,3 +414,152 @@
     }
     AS.storage.set('storageChanged', 'false');
 })(AS);
+
+//indexedDB
+(function(AS, window, undefined){
+    AS.db = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB;
+    if(!AS.db){
+        console.warn('该浏览器不支持indexedDB!!');
+        return;
+    }
+    var idbTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction;
+    function EasyDB(dbname){
+        this._version = 0;
+        this.dbname = dbname;
+        this.request = undefined;
+        this.dbresult = undefined;
+        this.objectstore = {}; //表名：表
+        this.currStoreName = "";
+        this.needDelete = "";
+    }
+
+    EasyDB.prototype.use = function(tablename, options){
+        options = AS.extend({
+            indexArr: [],
+            success: AS.noop,
+            error: AS.noop,
+            keyPath: 'id'
+        }, options || {});
+        var that = this;
+        
+        var _open = function(){
+            if(that._version){
+                that.request = AS.db.open(that.dbname, that._version);
+            }else{
+                that.request = AS.db.open(that.dbname);
+            }
+            
+            that.request.onerror = function(e){
+                console.error('本地数据库创建/打开失败', e);
+            };
+            that.request.onsuccess = function(e){
+                if(that.needDelete){
+                    console.warn('删除表' + that.needDelete);
+                    that.needDelete = "";
+                    return;
+                }
+                that.dbresult = this.result;
+                that.currStoreName = tablename;
+                that._version = that.dbresult.version;
+                options.success.call(that);
+            };
+
+            that.request.onupgradeneeded = function (e) {
+                //如果needDelete有值，则删除此store
+                if(that.needDelete){
+                    this.result.deleteObjectStore(that.needDelete);
+                    return;
+                }
+                console.log('升级数据库' + that.dbname + 'to version ' + this.result.version);
+                if(!this.result.objectStoreNames.contains(tablename)){
+                    console.log('create objectstore' + tablename);
+                    this.result.createObjectStore(tablename, {autoIncrement: true, keyPath: options.keyPath});
+                    for(var indexname in options.indexArr){
+                        that.objectstore[tablename].createIndex(indexname);
+                    }
+                }
+            };
+        };
+
+        if(!this.request){
+            _open();
+        }else if((this.dbresult && !this.dbresult.objectStoreNames.contains(tablename)) || this.needDelete){
+            this._version ++;
+            this.dbresult.close();
+            _open();
+        }else{
+            if(tablename != this.currStoreName){
+                this.currStoreName = tablename;
+            }
+            options.success.call(this);
+        }
+    };
+
+    EasyDB.prototype.set = function(blob){
+        this._getObjectStore().put(blob);
+    };
+
+    EasyDB.prototype.get = function(name, callback){
+        var table = this._getObjectStore();
+        var _this = this;
+        if(AS.isFunction(name)){
+            callback = name;
+            table.getAll().onsuccess = function(e){
+                callback.call(_this, e.target.result);
+            };
+        }else if(name){
+            table.get(name).onsuccess = function(e){
+                callback.call(_this, e.target.result);
+            };
+        }
+    };
+    EasyDB.prototype._getObjectStore = function(){
+        var tablename = this.currStoreName;
+        return this.dbresult.transaction(tablename, 'readwrite').objectStore(tablename);
+    };
+
+    //删除表
+    EasyDB.prototype.delStore = function(tablename){
+        if(!this.dbresult.objectStoreNames.contains(tablename)) return;
+        this.needDelete = tablename;
+        this.use(tablename);
+    };
+
+    AS._DBS = {}; //用于存储所有的EasyDB的实例
+    //获取或创建数据库
+    AS.getDB = function(name){
+        if(AS._DBS[name]) return AS._DBS[name];
+        AS._DBS[name] = new EasyDB(name);
+        return AS._DBS[name];
+    }
+    AS.delDB = function(dbname){
+        AS.db.deleteDatabase(dbname);
+    };
+ })(AS, window);
+
+ //一个特殊时间
+ (function(AS, window, undefined){
+    var start = "2016-02-14 06:00:00";
+    var startTime = new Date(start).getTime();
+    window.setInterval(timing, 500);
+    function timing(){
+        var nowTime = new Date().getTime();
+        var diffMs = nowTime - startTime;
+        var year = realYear = Math.floor(diffMs / 1000 / 60 / 60 / 24 / 365);
+        var month = Math.floor(diffMs / 1000 / 60 / 60 / 24 / 30 % 12);
+        var realMonth = Math.floor(diffMs / 1000 / 60 / 60 / 24 / 30);
+        var day = Math.floor(diffMs / 1000 / 60 / 60 / 24 % 30);
+        var realDay = Math.floor(diffMs / 1000 / 60 / 60 / 24);
+        var hour = Math.floor(diffMs / 1000 / 60 / 60 % 24);
+        var min = Math.floor(diffMs / 1000 / 60 % 60);
+        var sec = Math.floor(diffMs / 1000 % 60);
+        var result = [];
+        if(year != 0){
+            result.push(year + '年');
+        }
+        result = result.join('');
+        AS.time = result + '' + month + '月' + day + '天' + hour + '小时' + min + '分' + sec + '秒';
+    }
+ })(AS, window);
+
+
