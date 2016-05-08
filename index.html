@@ -78,7 +78,8 @@
 			<p class="a-finished-tap-time">{{ created_at }}</p>
 		</a>
 	</script>
-	
+	<!-- 由于原生Object.observe被弃用，采用第三方解决方案 -->
+	<script type="text/javascript" src="./js/object-observe.min.js"></script>
 	<script type="text/javascript">
 		var _hmt = _hmt || [];
 		(function() {
@@ -93,7 +94,6 @@
 	<script type="text/javascript" src="./js/handlebars-v4.0.2.js"></script>
 	<script src="https://cdn.wilddog.com/js/client/current/wilddog.js"></script>
 	<script type="text/javascript" src="./js/AS.js"></script>
-	<script type="text/javascript" src="./js/EasyDB.js"></script>
 	<script type="text/javascript" src="./js/sync.js"></script>
 	<script type="text/javascript" src="./js/store.js"></script>
 	<script type="text/javascript" src="./js/task.js"></script>
