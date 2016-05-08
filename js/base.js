@@ -1,3 +1,5 @@
+var DBNAME = 'TODO';
+var STORENAME = 'finishedData'
 var generatorClicked = false;
 //处理背景图适配
 setBackground();
@@ -87,17 +89,24 @@ function init(){
 }
 
 function next(){
-	//连接indexeddb数据库
-	AS.getDB('todo').use('finishedData', {keyPath: 'tid', success: function(){
+	connectDB(function(data){
+		AS.finishedData = data;
+		AS.store.init($('.a-list'));
+		initTools();
+		bindListeners();
+		$('.a-userinfo .a-userid').html(AS.storage.get('uuid', AS.VALUE_TYPE['str']));
+	});
+}
+
+//连接indexeddb数据库
+function connectDB(callback){
+	if(AS.finishedDB) return;
+	AS.getDB(DBNAME).use(STORENAME, {keyPath: 'tid', success: function(){
 		console.log('连接indexedDB成功');
 		this.get(function(data){
 			console.log('=========', data);
 			AS.finishedDB = this;
-			AS.finishedData = data;
-			AS.store.init($('.a-list'));
-			initTools();
-			bindListeners();
-			$('.a-userinfo .a-userid').html(AS.storage.get('uuid', AS.VALUE_TYPE['str']));
+			callback(data);
 		});
 	}});
 }
@@ -293,6 +302,7 @@ function initTools(){
 		if(action){
 			var save = window.confirm('需要保留当前身份信息么？');
 			AS.storage.clear(!save);
+			AS.delDB(DBNAME);
 		}
 	}).tooltip();
 }
@@ -338,13 +348,18 @@ function dateTransfer(dateStr){
 	return new Date(dateStr);
 }
 
-//将得到的background-color由rgb格式(rgb(255, 255, 255))转换为hex格式(#ffffff)
-function rgbToHex(bgColor){
-	if(!bgColor) return;
-	bgColor = bgColor.substring(4, bgColor.length-1).split(',');
-	var r = parseInt(bgColor[0]),
-		g = parseInt(bgColor[1]),
-		b = parseInt(bgColor[2]);
-	var result = '#' + r.toString(16) + g.toString(16) + b.toString(16);
-	return result;
-}
+ //临时的数据迁移方法
+ //将DONE_DATA从loaclstorage迁移到indexeddb中
+ (function(AS, window){
+    AS.moveDoneData = function(){
+        AS.backup = true;
+        var finishedData_local = AS.store.get(AS.DONE_DATA);
+        if(!finishedData_local || AS.isEmptyObject(finishedData_local)) return;
+        for(var tid in finishedData_local){
+            var data = finishedData_local[tid];
+            new Task(data);
+            AS.TID_ARRAY.push(tid);
+        }
+        window.localStorage.setItem('finishedData','');
+    };
+ })(AS, window);

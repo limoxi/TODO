@@ -29,7 +29,7 @@
 			AS.storage.set('observer', AS.settings.colorfulStatus);
 		},
 		get: function(mode, callback){
-			if(mode == AS.DONE_DATA){
+			if(mode == AS.DONE_DATA && !AS.backup){
 				//完成的任务从indexeddb中获取
 				AS.finishedDB.get(callback);
 			}else{
@@ -72,12 +72,12 @@
 		init: function($container){
 			AS.store.$container = $container;
 			var todoData = AS.store.get(AS.TODO_DATA);
-			var finishedData = AS.store.get(AS.DONE_DATA);
 			for(var tid in todoData){
 				var data = todoData[tid];
 				new Task(data);
 				AS.TID_ARRAY.push(tid);
 			}
+
 			for(var tid in AS.finishedData){
 				var data = AS.finishedData[tid];
 				new Task(data);
@@ -100,7 +100,7 @@
 				for(var min in AS.settings.colorfulStatus){
 					var col = AS.settings.colorfulStatus[min];
 					var bgColor = AS.store.$container.find('a[data-key="'+key+'"]').css('background-color');
-					var hex = rgbToHex(bgColor);
+					var hex = AS.rgbToHex(bgColor);
 					if(hex && dif >= min && hex!=col){
 						needNotify = true;
 						tempColor = col;

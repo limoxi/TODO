@@ -32,6 +32,8 @@ function Task(options){
 	this._store(true);
 	//监听对象变动
 	var that = this;
+	// Chrome最新版本m50已经废弃Object.observe方法,使用第三方解决方案
+	// https://github.com/polymer/observe-js
 	Object.observe(this, function(changes){
 		var change = changes[0],
 			changeType = change.type;

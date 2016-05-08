@@ -58,24 +58,50 @@
 			AS.storage.set('storageChanged', 'false');
 		},
 		push: function(storeVersion){
-			var uploadData = {
-				'todoData': AS.storage.get('todoData', AS.VALUE_TYPE['obj'], {}),
-				'finishedData': AS.storage.get('finishedData', AS.VALUE_TYPE['obj'], {}),
-				'observer': AS.storage.get('observer', AS.VALUE_TYPE['obj'], {}),
-				'timer': AS.storage.get('timer', AS.VALUE_TYPE['num'], 30),
-			}
-			remoteDataRef.update(uploadData);
-			remoteVersionRef.set(storeVersion);
-			AS.toast('同步完成，上传数据', 'success');
+			AS.finishedDB.get(function(data){
+				for(var i=0;i<data.length;i++){
+					if(!data[i].passed && data[i].passed !== ""){
+						data[i].passed = "";
+					}
+				}
+				var uploadData = {
+					'todoData': AS.storage.get('todoData', AS.VALUE_TYPE['obj'], {}),
+					'finishedData': data,
+					'observer': AS.storage.get('observer', AS.VALUE_TYPE['obj'], {}),
+					'timer': AS.storage.get('timer', AS.VALUE_TYPE['num'], 30),
+				}
+				console.log('push----', uploadData, typeof uploadData);
+				remoteDataRef.update(uploadData);
+				remoteVersionRef.set(storeVersion);
+				AS.toast('同步完成，上传数据', 'success');
+			});
 		},
 		pull: function(version){
-			remoteDataRef.once('value', function(obj){
-				var downData = obj.val();
-				AS.storage.save(downData);
+			var next = function(needSaveData){
+				AS.storage.save(needSaveData, 'finishedData');
 				storeVersion = version;
 				AS.storage.set('version', version);
 				AS.toast('同步完成，下载数据', 'success');
 				window.location.reload(true);
+			};
+			remoteDataRef.once('value', function(obj){
+				var downData = obj.val();
+				console.log('downData=====');
+				console.log(downData.finishedData);
+				if(downData.finishedData){
+					connectDB(function(){
+						AS.finishedDB.clearObjectStore(); //首先清空表记录
+						var len = downData.finishedData.length;
+						for(var i=0; i<len; i++){
+							AS.finishedDB.set(downData['finishedData'][i], function(){
+								AS.finishedData = downData['finishedData'];
+								next(downData);
+							});
+						}
+					});
+				}else{
+					next(downData);
+				}
 			});
 		}
 	};

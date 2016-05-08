@@ -269,6 +269,17 @@
         return true;
     }
 
+    //将得到的background-color由rgb格式(rgb(255, 255, 255))转换为hex格式(#ffffff)
+    function rgbToHex(bgColor){
+        if(!bgColor) return;
+        bgColor = bgColor.substring(4, bgColor.length-1).split(',');
+        var r = parseInt(bgColor[0]),
+            g = parseInt(bgColor[1]),
+            b = parseInt(bgColor[2]);
+        var result = '#' + r.toString(16) + g.toString(16) + b.toString(16);
+        return result;
+    }
+
 	/* 内部使用的工具方法 --end */
     AS.extend(AS, {
         isFunction: isFunction,
@@ -277,7 +288,8 @@
         array_remove: array_remove,
         array_contains: array_contains,
         string_trimAll: string_trimAll,
-        isEmptyObject: isEmptyObject
+        isEmptyObject: isEmptyObject,
+        rgbToHex: rgbToHex
     });
 	window.AS = AS;
 
@@ -343,10 +355,11 @@
                     console.log('不合法的值(localstorage): ', value);
             }
         },
-        save: function(data){
+        save: function(data, excludeKey){
             if(AS.isString(data)) data = JSON.parse(data);
             if(!data || AS.isEmptyObject(data)) return;
             for(var key in data){
+                if(excludeKey && key == excludeKey) continue;
                 store.set(key, data[key]);
             }
         },
@@ -495,8 +508,12 @@
         }
     };
 
-    EasyDB.prototype.set = function(blob){
-        this._getObjectStore().put(blob);
+    EasyDB.prototype.set = function(blob, callback){
+        console.log('data----', blob);
+        var request = this._getObjectStore().put(blob);
+        if(callback){
+            request.onsuccess = callback;
+        }
     };
 
     EasyDB.prototype.get = function(name, callback){
@@ -516,6 +533,10 @@
     EasyDB.prototype._getObjectStore = function(){
         var tablename = this.currStoreName;
         return this.dbresult.transaction(tablename, 'readwrite').objectStore(tablename);
+    };
+    //清空表记录
+    EasyDB.prototype.clearObjectStore = function(){
+        this._getObjectStore().clear();
     };
 
     //删除表
