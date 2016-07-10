@@ -1,6 +1,7 @@
 var DBNAME = 'TODO';
 var STORENAME = 'finishedData'
 var generatorClicked = false;
+var uuid = "";
 //处理背景图适配
 setBackground();
 window.onresize = setBackground;
@@ -14,7 +15,7 @@ function setBackground(){
 $(function(){
 	init();
 	initToast();
-	var uuid = AS.storage.get('uuid', AS.VALUE_TYPE['str']);
+	uuid = AS.storage.get('uuid', AS.VALUE_TYPE['str']);
 	if(!uuid){
 		$('.a-uuid-checker').on('click', function(){
 			var inputUuid = $('.a-uuid-container').find('input').val();
@@ -90,11 +91,18 @@ function init(){
 
 function next(){
 	connectDB(function(data){
+		uuid = AS.storage.get('uuid', AS.VALUE_TYPE['str']);
 		AS.finishedData = data;
 		AS.store.init($('.a-list'));
 		initTools();
 		bindListeners();
-		$('.a-userinfo .a-userid').html(AS.storage.get('uuid', AS.VALUE_TYPE['str']));
+		var userinfo = AS.storage.get('userinfo', AS.VALUE_TYPE['obj']);
+		if(userinfo){
+			$('.a-userinfo .a-userid').html(userinfo.name);
+		}else{
+			$('.a-userinfo .a-userid').html(uuid);
+		}
+		
 	});
 }
 
@@ -162,28 +170,90 @@ function bindListeners(){
 
 	this.editting = false;
 	$('.a-container').delegate('.a-tap-header span', 'click', function(){
-		var $tap = $(this).parents('.a-tap');
+		var $this = $(this);
+		var $tap = $this.parents('.a-tap');
 		var tid = $tap.attr('data-key');
 		var task = AS.TID2TASK[tid];
-		if($(this).hasClass('a-tap-delete')){
+		if($this.hasClass('a-tap-delete')){
 			//删除
 			AS.store.remove(AS.TODO_DATA, tid);
 			$tap.remove();
-		}else if($(this).hasClass('a-tap-done')){
+		}else if($this.hasClass('a-tap-done')){
 			//完成
 			AS.store.finish(tid);
 			$tap.remove();
-		}else if($(this).hasClass('a-tap-edit')){
+		}else if($this.hasClass('a-tap-edit')){
 			//编辑
 			$('.a-tap-new').val(task.title+"::"+task.content).attr('data-target', tid).focus();
-		}else if($(this).hasClass('a-tap-flash')){
+		}else if($this.hasClass('a-tap-flash')){
 			//关注
-			task.setFlash(!$(this).hasClass('action'));
-			$(this).toggleClass('action').parent().parent().toggleClass('animation-flash');
-		}else if($(this).hasClass('a-tap-routine')){
+			task.setFlash(!$this.hasClass('action'));
+			$this.toggleClass('action').parent().parent().toggleClass('animation-flash');
+		}else if($this.hasClass('a-tap-routine')){
 			//日常
-			task.setRoutine(!$(this).hasClass('action'));
-			$(this).toggleClass('action');
+			task.setRoutine(!$this.hasClass('action'));
+			$this.toggleClass('action');
+		}else if($this.hasClass('a-tap-share')){
+			//分享
+			if(AS.isEmptyObject(AS.storage.get('userinfo'))){	//如果当前用户没有详情信息，则弹出编辑窗口
+				$('.a-user-detail .a-i-id').find('span').html(uuid);
+				$('.a-user-detail').modal();
+			}else{	//否则，弹出分享窗口
+				$('.a-task-share').modal();
+			}
+		}
+	});
+
+	//用户信息弹窗
+	$('.a-userid').on('click', function(){
+		var userinfo = AS.storage.get('userinfo', AS.VALUE_TYPE['obj']);
+		console.log('==================', userinfo);
+		var $modal = $('.a-user-detail');
+		if(userinfo){
+			$modal.find('.a-i-pic img').attr('src', userinfo.avatar);
+			$modal.find('.a-i-id span').html(uuid);
+			$modal.find('.a-i-name span').html(userinfo.name);
+		}
+		$('.a-user-detail').modal('show');
+	});
+
+	//头像点击事件
+	$('.a-user-detail').delegate('.a-i-pic input', 'change', function(){
+		var $this = $(this);
+		var file = this.files[0];
+		if(file.size / 1024 /1024 > 1){
+			AS.toast('头像图片不能大于1MB', 'warn');
+			return;
+		}
+		var $img = $this.parent().find('img');
+		var reader = new FileReader();
+		reader.onload = function(e){
+			$img.attr('src', e.target.result);
+		};
+		reader.readAsDataURL(file);
+	});
+
+	//绑定模态窗的点击事件
+	$('body').delegate('.modal .a-modal-confirm', 'click', function(){
+		var $this = $(this);
+		var action = $this.attr('modal-action');
+		if('userinfo' == action){
+			//账户详情
+			var name = $('.a-user-detail').find('.a-i-name input').val();
+			if(name == ''){
+				AS.toast('请先填写用户名');
+				return;
+			}
+			var userinfo = {
+				'id': uuid,
+				'name': name,
+				'avatar': $('.a-user-detail').find('.a-i-pic img').attr('src')
+			};
+			AS.storage.set('userinfo', userinfo);
+			$('.a-userinfo .a-userid').html(name);
+			$('.a-user-detail').modal('hide');
+		}else if('share' == action){
+			//任务分享
 		}
 	});
 

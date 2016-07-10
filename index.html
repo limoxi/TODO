@@ -10,54 +10,107 @@
 	<link rel="stylesheet" type="text/css" href="./css/animate.css">
 </head>
 <body>
-<div class="jumbotron a-init">
-  <h1 class="a-init-header"></h1>
-  <p class="a-init-desc"></p>
-  <p class="a-init-link"><a class="btn btn-primary btn-lg" href="http://www.google.cn/intl/zh-CN/chrome/browser/desktop/index.html" role="button">下载谷歌浏览器</a></p>
-</div>
-<div class="a-main">
-	<div class="container-fluid a-guide">
-		<div class="a-mask"></div>
-		<div class="input-group a-uuid-container animation-guide">
-		  	<span class="input-group-addon a-user-icon"><i class="glyphicon glyphicon-user"></i></span>
-		  	<img src="./images/logo.jpg" class="a-guide-logo">
-		  	<input type="text" class="form-control a-user-idbox">
-		  	<span class="input-group-addon a-button a-uuid-checker">使用</span>
-		  	<span class="input-group-addon a-button a-uuid-generator">生成</span>
+	<div class="jumbotron a-init">
+	  <h1 class="a-init-header"></h1>
+	  <p class="a-init-desc"></p>
+	  <p class="a-init-link"><a class="btn btn-primary btn-lg" href="http://www.google.cn/intl/zh-CN/chrome/browser/desktop/index.html" role="button">下载谷歌浏览器</a></p>
+	</div>
+	<div class="a-main">
+		<div class="container-fluid a-guide">
+			<div class="a-mask"></div>
+			<div class="input-group a-uuid-container animation-guide">
+			  	<span class="input-group-addon a-user-icon"><i class="glyphicon glyphicon-user"></i></span>
+			  	<img src="./images/logo.jpg" class="a-guide-logo">
+			  	<input type="text" class="form-control a-user-idbox">
+			  	<span class="input-group-addon a-button a-uuid-checker">使用</span>
+			  	<span class="input-group-addon a-button a-uuid-generator">生成</span>
+			</div>
 		</div>
-	</div>
-	
-	<div class="container-fluid a-container">
-		<div class="list-group a-list"></div>
-	</div>
-	<div class="container a-slider-container">
-		<div class="list-group a-finished-list"></div>
-	</div>
-	<div class="a-footer container-fluid">
 		
-		<div class="a-userinfo">
-			<span class="glyphicon glyphicon-user"></span>
-			<span class="a-userid" data-toggle="tooltip" title="记住你的id"></span>
+		<div class="container-fluid a-container">
+			<div class="list-group a-list"></div>
 		</div>
-		<div class="a-settings">
-			<span class="glyphicon glyphicon-floppy-remove a-clean" data-toggle="tooltip" title="危险操作！！清空本地数据"></span>
-			<span class="glyphicon glyphicon-refresh a-sync" title="云同步"></span>
-			<span class="glyphicon glyphicon-list a-doneList" title="查看已完成的任务"></span>
-			<span title="提醒频率设置"><em class="glyphicon glyphicon-cog a-setting" data-toggle="setting-popover"></em></span>
-			<span title="提醒设置"><em class="glyphicon glyphicon-time a-observer" data-toggle="observer-popover"></em></span>
-			<span class="glyphicon glyphicon-bell a-notify" data-toggle="notify-tooltip"></span>
+		<div class="container a-slider-container">
+			<div class="list-group a-finished-list"></div>
 		</div>
+		<div class="a-footer container-fluid">
+			
+			<div class="a-userinfo">
+				<span class="glyphicon glyphicon-user"></span>
+				<span class="a-userid"></span>
+			</div>
+			<div class="a-settings">
+				<span class="glyphicon glyphicon-floppy-remove a-clean" data-toggle="tooltip" title="危险操作！！清空本地数据"></span>
+				<span class="glyphicon glyphicon-refresh a-sync" title="云同步"></span>
+				<span class="glyphicon glyphicon-list a-doneList" title="查看已完成的任务"></span>
+				<span title="提醒频率设置"><em class="glyphicon glyphicon-cog a-setting" data-toggle="setting-popover"></em></span>
+				<span title="提醒设置"><em class="glyphicon glyphicon-time a-observer" data-toggle="observer-popover"></em></span>
+				<span class="glyphicon glyphicon-bell a-notify" data-toggle="notify-tooltip"></span>
+			</div>
 
-		<input type="text" data-target="" class="a-tap-new" placeholder="需要做些什么...(50字限制)" maxlength="100">
+			<input type="text" data-target="" class="a-tap-new" placeholder="需要做些什么...(50字限制)" maxlength="100">
+		</div>
+		<div class="alert a-alert animation-toast" role="alert">
+			<span class="a-alert-message"></span>
+		</div>
 	</div>
-	<div class="alert a-alert animation-toast" role="alert">
-		<span class="a-alert-message"></span>
+	<!-- 模态窗 -->
+	<!-- 用户详情 -->
+	<div class="modal fade a-user-detail" role="dialog" aria-labelledby="gridSystemModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="gridSystemModalLabel">账户详细</h4>
+				</div>
+				<div class="modal-body row">
+					<div class="col-md-6 container-fluid">
+						<p class="a-i-pic">
+							<img src="./images/default_avatar.png">
+							<input type="file" accept="image/*" alt="上传头像" class="a-i-avatar">
+						</p>
+						<p class="a-i-id">ID： <span></span></p>
+						<p class="a-i-name">昵称： <span><input type="text" maxlength="10"></span></p>
+					</div>
+					<div class="col-md-1 a-i-split"></div>
+					<div class="col-md-5 container-fluid">
+						<p class="a-i-share">分享数： <b>0</b></p>
+						<p class="a-i-msg">未读消息数： <b>0</b></p>
+						<p class="a-i-group">分组标签： <span>暂无分组</span></p>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="button" class="btn btn-primary a-modal-confirm" modal-action="userinfo">保存</button>
+				</div>
+			</div>
+		</div>
 	</div>
-</div>
+	<!-- 分享任务 -->
+	<div class="modal fade a-task-share" role="dialog" aria-labelledby="gridSystemModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="gridSystemModalLabel">分享任务</h4>
+				</div>
+				<div class="modal-body">
+					<div class="container-fluid">
+						任务卡片
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="button" class="btn btn-primary a-modal-confirm" modal-action="share">分享</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<!-- template -->
 	<script id="tap-template" type="text/x-handlebars-template">
 		<a class="list-group-item a-tap {{#if flash}}animation-flash{{/if}}" data-key="{{ tid }}">
 			<p class="a-tap-header">
+				<span class="a-tap-share glyphicon glyphicon-send" data-toggle="tooltip" title="分享"></span>
 				<span class="a-tap-delete glyphicon glyphicon-remove" data-toggle="tooltip" title="删除"></span>
 				<span class="a-tap-done glyphicon glyphicon-ok" data-toggle="tooltip" title="完成"></span>
 				<span class="a-tap-edit glyphicon glyphicon-wrench" data-toggle="tooltip" title="编辑"></span>
